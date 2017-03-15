@@ -92,6 +92,8 @@ public class STARSApp {
 	{
 		Student stud = new Student(username, "U1620736G", "Student1", 'F', "Singaporean");
 		return stud;
+		
+		//comment by yiu
 	}
 }
 
