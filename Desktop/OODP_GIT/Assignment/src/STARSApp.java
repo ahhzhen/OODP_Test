@@ -34,8 +34,9 @@ public class STARSApp {
 			user = input.next();
 			
 			System.out.print("Please key in password: ");
-			char[] passString = console.readPassword();
-			pw = new String(passString);
+			/*char[] passString = console.readPassword();
+			pw = new String(passString);*/
+			pw = input.next();
 			
 			login = checkLogin(uList, user, pw, type);
 			choice = 0;
