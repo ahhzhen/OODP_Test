@@ -1,4 +1,4 @@
 
-public class CourseIndex extends Course {
+public class CourseIndex {
 
 }

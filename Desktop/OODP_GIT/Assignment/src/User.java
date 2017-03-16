@@ -1,5 +1,6 @@
+import java.util.Scanner;
 
-public class User {
+public abstract class User {
 	private String username;
 	private String password;
 	private String type;
@@ -11,5 +12,11 @@ public class User {
 		type = t;
 	}
 	
+	User(String u)
+	{
+		username = u;
+	}
+	
+	abstract void displayMenu();
 	
 }

@@ -11,12 +11,12 @@ public class STARSApp {
 		Console console = System.console();
 		String type = "", user = "", pw = "";
 		int choice = 0;
-		Student stud;
+		User userSession;
 		boolean login = false;
 		ArrayList<String> uList = new ArrayList<String>();
 		String str = "abdced";
 		uList.add("123456;" + str.hashCode()+";Admin");
-		uList.add("aud0074;" + "abd645".hashCode()+";Student");
+		uList.add("aaa074;" + "123456".hashCode()+";Student");
 		System.out.println("Welcome~\nPlease Login");
 		while(login == false)
 		{
@@ -34,25 +34,24 @@ public class STARSApp {
 			user = input.next();
 			
 			System.out.print("Please key in password: ");
-			/*char[] passString = console.readPassword();
-			pw = new String(passString);*/
-			pw = input.next();
+			char[] passString = console.readPassword();
+			pw = new String(passString);
+			//pw = input.next();
 			
 			login = checkLogin(uList, user, pw, type);
 			choice = 0;
 		}
-		if(type.equals("Student"))
+		userSession = createUser(user, type);
+		while(choice!= 7)
 		{
-			stud = createStudent(user);
-			while(choice != 0)
-			{
-				displayStudentMenu();
-				
-			}
-		}
-		else
-		{
-			
+			userSession.displayMenu();
+			System.out.println("Please select choice from menu: ");
+			try{choice = input.nextInt();}
+			catch(Exception e){input.next();}
+			if(userSession instanceof Student)
+				studentMenu((Student)userSession,choice);
+			else
+				adminMenu((Admin)userSession, choice);
 		}
 	}
 
@@ -76,25 +75,59 @@ public class STARSApp {
 		System.out.println("Login failed. Please try again.");
 		return false;
 	}
-
-	public static void displayStudentMenu()
+		
+	public static User createUser(String username, String type)
 	{
-		System.out.println("");
-		System.out.println("1. Add Course");
-		System.out.println("2. Drop Course");
-		System.out.println("3. Check Courses Registered");
-		System.out.println("4. Check vacancies available");
-		System.out.println("5. Change index number of a course");
-		System.out.println("6. Swop index number with another student");
-		System.out.println("7. Quit");
+		User u;
+		if(type.equals("Student"))
+			u = new Student(username, "U1620736G", "Student1", 'F', "Singaporean");
+		else
+			u = new Admin(username);
+		return u;
+	}
+
+	public static void studentMenu(Student stud, int choice)
+	{
+		switch(choice)
+		{
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		default:System.out.println("Wrong input detected, please try again!");
+		}
 	}
 	
-	public static Student createStudent(String username)
+	public static void adminMenu(Admin adm, int choice)
 	{
-		Student stud = new Student(username, "U1620736G", "Student1", 'F', "Singaporean");
-		return stud;
-		
-		///yiu don comment anyhow
+		switch(choice)
+		{
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		default:System.out.println("Wrong input detected, please try again!");
+		}
 	}
 }
 
