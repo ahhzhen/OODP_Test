@@ -10,6 +10,7 @@ public class Admin extends User
 	public void addStudent(String u, String p)
 	{
 		//read write to file the details
+		//first hs
 	}
 	
 	public void editStudentAccessPeriod()
