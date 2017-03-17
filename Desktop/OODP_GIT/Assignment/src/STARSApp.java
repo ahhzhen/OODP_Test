@@ -120,7 +120,7 @@ public class STARSApp {
 			break;
 		case 4:
 			break;
-		case 5:
+		case 5: //jeanelle first commit
 			break;
 		case 6:
 			break;
