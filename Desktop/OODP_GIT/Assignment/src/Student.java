@@ -1,4 +1,6 @@
 import java.util.*;
+import java.io.*;
+
 public class Student extends User {
 	private String matricNo;
 	private String name;
@@ -6,15 +8,22 @@ public class Student extends User {
 	private String nationality;
 	private Date start;
 	private Date end;
-	private Course[] cList;
+	private CourseIndex[] cList;
 	
-	Student(String u, String matric, String n, char c, String nation)
+	 //create linked list
+    LinkedList<studentRecords> list = new LinkedList<studentRecords>();    
+    String inFile = "studentRecords.txt";
+    //inititate readers to null
+    FileReader fr = null;
+    BufferedReader br = null;
+    
+	Student(String username, String matricNo, String name, char gender, String nationality)
 	{
-		super(u);
-		matricNo = matric;
-		name = n;
-		gender = c;
-		nationality = nation;
+		super(username);
+		this.matricNo = matricNo;
+		this.name = name;
+		this.gender = gender;
+		this.nationality = nationality;
 	}
 	
 	public String getMatricNo(){return matricNo;}
@@ -40,5 +49,6 @@ public class Student extends User {
 		System.out.println("6. Swop index number with another student");
 		System.out.println("7. Quit");
 	}
+	
 	
 }
