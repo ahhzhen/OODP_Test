@@ -1,11 +1,48 @@
 
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.*;
 public class Admin extends User
 {
+	
 	Admin(String u)
 	{
 		super(u);
+	}
+	
+	private void establishDB(){
+		ArrayList<ArrayList> studentList = new ArrayList<ArrayList>();
+		try {
+			Scanner scStream = new Scanner(new File("studentInfo.txt")).useDelimiter("\\s*,\\s*");
+			String input;
+			int i=0;
+			while(scStream.hasNext()){
+				ArrayList<String> eachStudent=new ArrayList<String>();
+				for(i=0;i<7;i++){
+					input=scStream.next();
+					System.out.println(i);
+					eachStudent.add(i,input);
+				}
+				studentList.add(eachStudent);
+			}
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(int x=0;x<studentList.size();x++){
+			for(int y=0;y<studentList.get(x).size();y++){
+				System.out.println(studentList.get(x).get(y));
+			}
+			System.out.println();
+		}
+		
+		
 	}
 	public void addStudent()
 	{
@@ -23,7 +60,7 @@ public class Admin extends User
 		matricNo=sc.next();
 		gender=sc.next().charAt(0);
 		nationality=sc.next();
-		
+
 		/*add to DB*/
 	}
 
@@ -79,20 +116,27 @@ public class Admin extends User
 				System.out.println("Update School:");
 				String newCourseSchool=sc.next();
 				/*Update DB*/
+				break;
 			case 3:
 				/*print all existing indexes from DB*/
 				System.out.println("Key in existing index to remove, new index to add:");
 				int courseIndex=sc.nextInt();
 				/*add/remove index from db*/
+				break;
 			case 4:
+				System.out.println("Please pick Course Index:");
+				int selectCourseIndex=sc.nextInt();
 				System.out.println("Update Vacancies:");
 				String newVacancies=sc.next();
-				/*Update DB*/
+				/*Update DB with course index and new vacancy*/
+				break;
+			default:
+				break;
 			}
 		}
-		
+
 	}
-	
+
 	public void checkVacancies(){
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Please enter Course Code:");
@@ -100,8 +144,32 @@ public class Admin extends User
 		/*query DB with coursecode*/
 		/*print vacancies left*/
 	}
-	
+
 	public void printStudentListByIndex(){
+		System.out.println("Error");
+		try{
+			System.out.println(".");
+			Scanner scStream = new Scanner(new File("indexInfo.txt")).useDelimiter("\\s*,\\s*");
+			ArrayList<String> studentList = new ArrayList<String>();
+			String input;
+			int i=0;
+			while(scStream.hasNext()){
+				
+				i++;
+				System.out.println(i);
+				
+				input = scStream.next();
+				System.out.println("msg:"+input);
+				if(input.equals("SCSE")){
+					System.out.println("hello");
+				}
+				
+				
+			}
+			scStream.close();
+		}catch(IOException e){
+				System.out.println("Error");
+		}
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Please enter Index Number:");
 		int indexNo = sc.nextInt();
@@ -116,7 +184,7 @@ public class Admin extends User
 		/*query db*/
 		/*print list of students*/
 	}
-	
+
 	public void displayMenu()
 	{
 		System.out.println("");
@@ -127,6 +195,9 @@ public class Admin extends User
 		System.out.println("5. Print Student List By Index Number");
 		System.out.println("6. Print Student List By Course");
 		System.out.println("7. Quit");
+		//printStudentListByIndex();
+		establishDB();
+		
 	}
 
 }
