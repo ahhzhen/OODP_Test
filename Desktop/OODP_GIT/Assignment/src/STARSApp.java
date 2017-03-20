@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public class STARSApp {
 
 	public static void main(String[] args) {
-		int a=1;
+		int a=2;
 		Scanner input = new Scanner(System.in);
 		Console console = System.console();
 		String type = "", user = "", pw = "";
