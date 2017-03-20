@@ -9,15 +9,16 @@ import java.io.ObjectInputStream;
 import java.util.*;
 public class Admin extends User
 {
-	
+	private ArrayList<ArrayList> studentList = new ArrayList<ArrayList>();
+	private ArrayList<ArrayList> indexList = new ArrayList<ArrayList>();
 	Admin(String u)
 	{
 		super(u);
 	}
-	
+
 	private void establishDB(){
-		ArrayList<ArrayList> studentList = new ArrayList<ArrayList>();
 		try {
+			//Retrieve from db StudentList
 			Scanner scStream = new Scanner(new File("studentInfo.txt")).useDelimiter("\\s*,\\s*");
 			String input;
 			int i=0;
@@ -30,7 +31,27 @@ public class Admin extends User
 				}
 				studentList.add(eachStudent);
 			}
-			
+			scStream.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Retrieve from db indexInfo
+		try {
+			Scanner scStream = new Scanner(new File("indexInfo.txt")).useDelimiter("\\s*,\\s*");
+			String input;
+			int i=0;
+			while(scStream.hasNext()){
+				ArrayList<String> eachIndex=new ArrayList<String>();
+				for(i=0;i<4;i++){
+					input=scStream.next();
+					System.out.println(i);
+					eachIndex.add(i,input);
+				}
+				indexList.add(eachIndex);
+			}
+			scStream.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,8 +62,14 @@ public class Admin extends User
 			}
 			System.out.println();
 		}
-		
-		
+		for(int x=0;x<indexList.size();x++){
+			for(int y=0;y<indexList.get(x).size();y++){
+				System.out.println(indexList.get(x).get(y));
+			}
+			System.out.println();
+		}
+
+
 	}
 	public void addStudent()
 	{
@@ -146,38 +173,17 @@ public class Admin extends User
 	}
 
 	public void printStudentListByIndex(){
-		System.out.println("Error");
-		try{
-			System.out.println(".");
-			Scanner scStream = new Scanner(new File("indexInfo.txt")).useDelimiter("\\s*,\\s*");
-			ArrayList<String> studentList = new ArrayList<String>();
-			String input;
-			int i=0;
-			while(scStream.hasNext()){
-				
-				i++;
-				System.out.println(i);
-				
-				input = scStream.next();
-				System.out.println("msg:"+input);
-				if(input.equals("SCSE")){
-					System.out.println("hello");
-				}
-				
-				
-			}
-			scStream.close();
-		}catch(IOException e){
-				System.out.println("Error");
-		}
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Please enter Index Number:");
 		int indexNo = sc.nextInt();
-		/*query db*/
-		/*print list of students*/
+		for(int i=0;i<studentList.size();i++){
+			if(Integer.toString(indexNo).equals(studentList.get(i).get(6))){
+				System.out.println(studentList.get(i).get(0));
+			}
+		}
 	}
 
-	public void printCourseListByCourse(){
+	public void printStudentListByCourse(){
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Please enter Course Code:");
 		String courseCode = sc.next();
@@ -187,17 +193,44 @@ public class Admin extends User
 
 	public void displayMenu()
 	{
-		System.out.println("");
-		System.out.println("1. Edit A Student's Access Period");
-		System.out.println("2. Add A Student");
-		System.out.println("3. Add/Update Course");
-		System.out.println("4. Check vacancies of a course");
-		System.out.println("5. Print Student List By Index Number");
-		System.out.println("6. Print Student List By Course");
-		System.out.println("7. Quit");
-		//printStudentListByIndex();
+		Scanner s=new Scanner(System.in);
+		int choice=0;
 		establishDB();
-		
+		while(choice!=7){
+			System.out.println("");
+			System.out.println("1. Edit A Student's Access Period");
+			System.out.println("2. Add A Student");
+			System.out.println("3. Add/Update Course");
+			System.out.println("4. Check vacancies of a course");
+			System.out.println("5. Print Student List By Index Number");
+			System.out.println("6. Print Student List By Course");
+			System.out.println("7. Quit");
+			choice=s.nextInt();
+			switch(choice){
+			case 1:
+				editStudentAccessPeriod();
+				break;
+			case 2:
+				addStudent();
+				break;
+			case 3:
+				addCourse();
+				break;
+			case 4:
+				checkVacancies();
+				break;
+			case 5:
+				printStudentListByIndex();
+				break;
+			case 6:
+				printStudentListByCourse();
+				break;
+			default:
+				break;
+			}
+		}
+
+
 	}
 
 }
