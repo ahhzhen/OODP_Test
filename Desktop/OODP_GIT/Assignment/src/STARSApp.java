@@ -1,4 +1,3 @@
-
 import java.util.*;
 import java.io.Console;
 import java.util.regex.Pattern;
@@ -6,7 +5,7 @@ import java.util.regex.Pattern;
 public class STARSApp {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		int a=1;
 		Scanner input = new Scanner(System.in);
 		Console console = System.console();
 		String type = "", user = "", pw = "";
