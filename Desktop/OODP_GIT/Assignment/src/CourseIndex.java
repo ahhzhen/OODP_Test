@@ -3,7 +3,11 @@
   public class CourseIndex {
   	private int vacancy;
   	private int index;
-  	private ArrayList<timeSlot> lessons = new ArrayList<timeSlot>();
+  	public int getVacancy() {
+		return vacancy;
+	}
+
+	private ArrayList<timeSlot> lessons = new ArrayList<timeSlot>();
   	CourseIndex(int in, int vac)
   	{
   		vacancy = vac;
