@@ -99,6 +99,8 @@ public class Student extends User {
 
 	public static void checkOrPrintCoursesRegistered() {
 		StudentCourse.getRegisteredList();
+		
+		//print list
 	}
 
 	public static int checkVacanciesAvailable() {
