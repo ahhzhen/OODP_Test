@@ -30,7 +30,7 @@ public class Course {
 		cindex=courseindex;
 		return cindex;
 	}
-	public void UpdateIndex(int cIndex, int nIndex)
+	public void UpdateIndex(int cIndex, int vacancy)
 	{
 		for(int i=0; i<cIndexList.size(); i++)
 		{
@@ -40,8 +40,8 @@ public class Course {
 			}
 			else
 			{
-				cIndexList.get(i).UpdateIndex(nIndex);
-				cIndexList.get(i).UpdateVacancy(nIndex);
+				cIndexList.get(i).UpdateIndex(vacancy);
+				cIndexList.get(i).UpdateVacancy(vacancy);
 			}
 		}
 		//check arraylist for matching index'
