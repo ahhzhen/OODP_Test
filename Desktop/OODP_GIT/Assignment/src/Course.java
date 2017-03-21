@@ -5,6 +5,7 @@ public class Course {
 	private String name;
 	private String courseCode;
 	private String school;
+	private int cindex;
 	private ArrayList<CourseIndex> cIndexList;
 
 	public Course(String courseCode) {
@@ -26,7 +27,8 @@ public class Course {
 
 	public int getCourseIndexes(int courseindex)
 	{
-		return null;
+		cindex=courseindex;
+		return cindex;
 	}
 	public void UpdateIndex(int cindex, int nindex)
 	{
