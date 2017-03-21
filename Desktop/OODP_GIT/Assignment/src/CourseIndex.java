@@ -3,15 +3,34 @@
   public class CourseIndex {
   	private int vacancy;
   	private int index;
+  	private String courseCode;
   	public int getVacancy() {
 		return vacancy;
 	}
 
 	private ArrayList<timeSlot> lessons = new ArrayList<timeSlot>();
-  	CourseIndex(int in, int vac)
+  	public CourseIndex(int in, int vac)
   	{
   		vacancy = vac;
   		index = in;
+  	}
+  	public CourseIndex(String cCode, int in, int vac)
+  	{
+  		courseCode=cCode;
+  		vacancy=vac;
+  		index=in;
+  	}
+  	public int getIndex()
+  	{
+  		return index;
+  	}
+  	public void UpdateIndex(int index)
+  	{
+  		
+  	}
+  	public void UpdateVacancy(int vacancy)
+  	{
+  		
   	}
   	public void Increase() {
   		vacancy++;
@@ -24,8 +43,8 @@
   			System.out.println("Index is full");
   		}
   	}
-  
-  	public void setTimeSlot(int d, String t, String ltype) {
+  	
+  	/*public void setTimeSlot(int d, String t, String ltype) {
   		if (ltype == "LEC" || ltype == "TUT" || ltype == "LAB")
   		{
   			lessons.add(new timeSlot(d, t, ltype));
@@ -44,5 +63,5 @@
   			//Timetable call here
   			lessons.get(i).print();
   		}
-  	}
+  	}*/
   }

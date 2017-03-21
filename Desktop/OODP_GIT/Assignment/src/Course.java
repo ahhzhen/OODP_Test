@@ -33,5 +33,9 @@ public class Course {
 		//check arraylist for matching index'
 		//switch with new index
 	}
+	public void UpdateVacancy(int cindex, int nindex)
+	{
+		
+	}
 	
 }
