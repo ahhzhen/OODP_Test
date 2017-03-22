@@ -94,7 +94,7 @@ public class Student extends User {
 		{
 			System.out.println("CourseCode:"+list.get(i).getCourseCode());
 			System.out.println("CourseIndex:"+list.get(i).getCourseIndex());
-		}
+		} 
 		
 	}
 
