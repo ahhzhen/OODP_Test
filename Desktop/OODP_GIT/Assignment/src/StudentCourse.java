@@ -28,7 +28,7 @@ public class StudentCourse implements Serializable {
 	}
 
 	public static List getRegisteredList() {
-		return getRegisteredList("RegisterFile.dat");
+		return getRegisteredList("studentRecords.txt");
 	}
 
 	public static List getRegisteredList(String fileName) {

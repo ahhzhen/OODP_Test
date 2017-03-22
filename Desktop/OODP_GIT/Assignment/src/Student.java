@@ -11,12 +11,6 @@ public class Student extends User {
 	private Date end;
 	private CourseIndex[] cList;
 
-//	// create linked list
-//	static LinkedList<studentRecords> studList = new LinkedList<studentRecords>();
-//	static LinkedList<courseRecords> courseList = new LinkedList<courseRecords>();
-//	static String studentRecordFile = "studentRecords.txt";
-//	String courseRecordFile = "testStudentFile.txt";
-
 
 	public Student(String username, String matricNo, String name, char gender,String nationality) {
 		super(username);
@@ -98,9 +92,10 @@ public class Student extends User {
 	}
 
 	public static void checkOrPrintCoursesRegistered() {
-		StudentCourse.getRegisteredList();
+		List list = StudentCourse.getRegisteredList();
 		
-		//print list
+		for(int i=0;i<list.size();i++)
+			System.out.println(list.get(i));
 	}
 
 	public static int checkVacanciesAvailable() {
