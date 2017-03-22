@@ -114,7 +114,18 @@ public class Student extends User {
 	}
 
 	public void changeIndexNumber() {
-
+		String courseCode,newIndex,oldIndex;
+		Scanner scanInput = new Scanner(System.in);
+		
+		System.out.println("Enter course code:");
+		courseCode = scanInput.nextLine();
+		System.out.println("Enter old course index:");
+		oldIndex=scanInput.nextLine();
+		System.out.println("Enter new course index:");
+		newIndex=scanInput.nextLine();
+		
+		StudentCourse.updateCourseIndex(courseCode,oldIndex,newIndex);
+		
 	}
 
 	public void swopIndexNumber() {
