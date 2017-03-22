@@ -17,7 +17,7 @@ public class FileIO {
 		return fileDetails;
 	}
 	
-	public static void writeToFile(String filename, List list)
+	public static boolean writeToFile(String filename, List list)
 	{
 		FileOutputStream fos = null;
 		ObjectOutputStream out = null;
@@ -26,9 +26,11 @@ public class FileIO {
 			out = new ObjectOutputStream(fos);
 			out.writeObject(list);
 			out.close();
+			return true;
 		}
 		catch(IOException ex){
 			ex.printStackTrace();
+			return false;
 		}
 	}
 }

@@ -108,6 +108,7 @@ public class STARSApp {
 			stud.swopIndexNumber();
 			break;
 		case 7:
+			stud.quit();
 			break;
 		default:
 			System.out.println("Wrong input detected, please try again!");

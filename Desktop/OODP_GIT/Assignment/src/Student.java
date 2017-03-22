@@ -3,7 +3,7 @@ import java.io.*;
 
 public class Student extends User {
 	private String username;
-	private String matricNo;
+	private static String matricNo;
 	private String name;
 	private char gender;
 	private String nationality;
@@ -20,7 +20,7 @@ public class Student extends User {
 		this.nationality = nationality;
 	}
 
-	public String getMatricNo() {
+	public static String getMatricNo() {
 		return matricNo;
 	}
 
@@ -68,7 +68,7 @@ public class Student extends User {
 
 	public void dropCourse() {
 		System.out.println("Courses registered:");
-		getCoursesRegistered(matricNo);
+		StudentCourse.getCoursesRegistered(matricNo);
 		
 		String courseCode,courseIndex;
 		Scanner scannerInput = new Scanner(System.in);
@@ -86,17 +86,18 @@ public class Student extends User {
 		
 	}
 
-	private void getCoursesRegistered(String matricNo2) {
+	public void checkOrPrintCoursesRegistered() {
 		// TODO Auto-generated method stub
+		List<StudentCourse> list = StudentCourse.getCoursesRegistered(getMatricNo());
+		
+		for(int i =0;i<list.size();i++)
+		{
+			System.out.println("CourseCode:"+list.get(i).getCourseCode());
+			System.out.println("CourseIndex:"+list.get(i).getCourseIndex());
+		}
 		
 	}
 
-	public static void checkOrPrintCoursesRegistered() {
-		List list = StudentCourse.getRegisteredList();
-		
-		for(int i=0;i<list.size();i++)
-			System.out.println(list.get(i));
-	}
 
 	public static int checkVacanciesAvailable() {
 		return -1;
@@ -108,5 +109,9 @@ public class Student extends User {
 
 	public static void swopIndexNumber() {
 
+	}
+	
+	public static void quit(){
+		System.out.println("Thank you for using STARSApp");
 	}
 }

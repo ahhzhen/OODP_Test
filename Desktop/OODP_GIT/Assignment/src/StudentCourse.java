@@ -6,7 +6,7 @@ public class StudentCourse implements Serializable {
 	private String matricNumber;
 	private String courseCode;
 	private String courseIndex;
-
+	public static List<StudentCourse> courseList = new ArrayList<StudentCourse>();
 	public StudentCourse(String matricNumber, String courseCode,
 			String courseIndex) {
 		super();
@@ -28,7 +28,7 @@ public class StudentCourse implements Serializable {
 	}
 
 	public static List getRegisteredList() {
-		return getRegisteredList("studentRecords.txt");
+		return getRegisteredList("studentRecords.dat");
 	}
 
 	public static List getRegisteredList(String fileName) {
@@ -42,9 +42,9 @@ public class StudentCourse implements Serializable {
 		return list;
 	}
 
-	public List getCoursesRegistered(String matric) {
+	public static List getCoursesRegistered(String matric) {
 		List list = getRegisteredList();
-		List<StudentCourse> courseList = new ArrayList<StudentCourse>();
+		
 
 		try {
 			for (int i = 0; i < list.size(); i++) {
@@ -68,8 +68,10 @@ public class StudentCourse implements Serializable {
 				StudentCourse studC = new StudentCourse(matricNumber,
 						courseCode, courseGroup);
 				studentList.add(studC);
+				save(studentList);
 				System.out.println("Course " + courseCode + "," + courseGroup
 						+ " has been registered.");
+				
 			}
 		} catch (Exception e) {
 			return false;
@@ -91,6 +93,7 @@ public class StudentCourse implements Serializable {
 					if (studC.getMatricNumber().equals(matricNumber)&& studC.getCourseCode().equals(courseCode)
 							&& studC.getCourseIndex().equals(courseIndex)) {
 						studentList.remove(studC);
+						save(studentList);
 						System.out.println("Course " + courseCode + "," + courseIndex + " has been dropped.");
 						}
 
@@ -113,6 +116,14 @@ public class StudentCourse implements Serializable {
 				return true; // Student exist
 		}
 		return false; // Student does not exist
+	}
+	
+	private static void save(List list) {
+		boolean success = FileIO.writeToFile("studentRecords.dat", list);
+		if(success=true)
+			System.out.println("OK");
+		else
+			System.out.println("Failed");
 	}
 
 }
