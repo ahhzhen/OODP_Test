@@ -7,6 +7,7 @@ public class StudentCourse implements Serializable {
 	private String courseCode;
 	private String courseIndex;
 	public static List<StudentCourse> courseList = new ArrayList<StudentCourse>();
+
 	public StudentCourse(String matricNumber, String courseCode,
 			String courseIndex) {
 		super();
@@ -44,13 +45,14 @@ public class StudentCourse implements Serializable {
 
 	public static List getCoursesRegistered(String matric) {
 		List list = getRegisteredList();
-		
 
 		try {
 			for (int i = 0; i < list.size(); i++) {
 				StudentCourse studC = (StudentCourse) list.get(i);
-				if (studC.getMatricNumber().equals(matric))
+				if (studC.getMatricNumber().equals(matric)) {
 					courseList.add(studC);
+					save(courseList);
+				}
 			}
 		} catch (Exception e) {
 		}
@@ -71,7 +73,7 @@ public class StudentCourse implements Serializable {
 				save(studentList);
 				System.out.println("Course " + courseCode + "," + courseGroup
 						+ " has been registered.");
-				
+
 			}
 		} catch (Exception e) {
 			return false;
@@ -81,28 +83,31 @@ public class StudentCourse implements Serializable {
 	}
 
 	// delete a entry of student record
-	public static boolean unregisterStudent(String matricNumber,
+	public static void unregisterStudent(String matricNumber,
 			String courseCode, String courseIndex) {
-	//	List list = getRegisteredList();
+		// List list = getRegisteredList();
 		List<StudentCourse> studentList = new ArrayList<StudentCourse>();
 
 		try {
 			for (int i = 0; i < studentList.size(); i++) {
 				StudentCourse studC = (StudentCourse) studentList.get(i);
-				
-					if (studC.getMatricNumber().equals(matricNumber)&& studC.getCourseCode().equals(courseCode)
-							&& studC.getCourseIndex().equals(courseIndex)) {
-						studentList.remove(studC);
-						save(studentList);
-						System.out.println("Course " + courseCode + "," + courseIndex + " has been dropped.");
-						}
 
-			} 
+				if (studC.getMatricNumber().equals(matricNumber)
+						&& studC.getCourseCode().equals(courseCode)
+						&& studC.getCourseIndex().equals(courseIndex)) {
+					studentList.remove(studC);
+					save(studentList);
+					System.out.println("Course " + courseCode + ","
+							+ courseIndex + " has been dropped.");
+				}
+
+			}
 		} catch (Exception e) {
-			return false;
+			System.out.println("Fail to drop.");
 		}
 
-		return true;
+		System.out.println("Course " + courseCode + "," + courseIndex
+				+ " has been dropped.");
 	}
 
 	// check if a student exist
@@ -117,10 +122,10 @@ public class StudentCourse implements Serializable {
 		}
 		return false; // Student does not exist
 	}
-	
+
 	private static void save(List list) {
 		boolean success = FileIO.writeToFile("studentRecords.dat", list);
-		if(success=true)
+		if (success = true)
 			System.out.println("OK");
 		else
 			System.out.println("Failed");

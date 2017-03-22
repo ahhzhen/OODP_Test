@@ -77,23 +77,21 @@ public class Student extends User {
 		System.out.println("Please enter courseGroup:");
 		courseIndex = scannerInput.nextLine();
 		
-		unregisterStudent(matricNo, courseCode,courseIndex);
+		StudentCourse.unregisterStudent(matricNo, courseCode,courseIndex);
 	}
 
-	private void unregisterStudent(String matricNo2, String courseCode,
-			String courseGroup) {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	public void checkOrPrintCoursesRegistered() {
 		// TODO Auto-generated method stub
 		List<StudentCourse> list = StudentCourse.getCoursesRegistered(getMatricNo());
 		
+		System.out.println("------------------------------------------");
 		for(int i =0;i<list.size();i++)
 		{
-			System.out.println("CourseCode:"+list.get(i).getCourseCode());
-			System.out.println("CourseIndex:"+list.get(i).getCourseIndex());
+			System.out.println("CourseCode: "+list.get(i).getCourseCode());
+			System.out.println("CourseIndex: "+list.get(i).getCourseIndex());
+			System.out.println("------------------------------------------");
 		}
 		
 	}
