@@ -6,7 +6,6 @@ public class STARSApp {
 
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
-		Console console = System.console();
 		String type = "", user = "", pw = "";
 		int choice = 0;
 		User userSession;

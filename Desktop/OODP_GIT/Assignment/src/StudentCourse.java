@@ -3,10 +3,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentCourse implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String matricNumber;
 	private String courseCode;
 	private String courseIndex;
-	public static List<StudentCourse> courseList = new ArrayList<StudentCourse>();
 
 	public StudentCourse(String matricNumber, String courseCode,
 			String courseIndex) {
@@ -45,7 +48,7 @@ public class StudentCourse implements Serializable {
 
 	public static List getCoursesRegistered(String matric) {
 		List list = getRegisteredList();
-
+		List<StudentCourse> courseList = new ArrayList<StudentCourse>();
 		try {
 			for (int i = 0; i < list.size(); i++) {
 				StudentCourse studC = (StudentCourse) list.get(i);
@@ -66,6 +69,9 @@ public class StudentCourse implements Serializable {
 		List<StudentCourse> studentList = new ArrayList<StudentCourse>();
 
 		try {
+
+			// *******Check that such a courseCode exist & it has vacancy******
+
 			if (!studentExist(matricNumber, courseCode)) {
 				StudentCourse studC = new StudentCourse(matricNumber,
 						courseCode, courseGroup);
@@ -85,12 +91,12 @@ public class StudentCourse implements Serializable {
 	// delete a entry of student record
 	public static void unregisterStudent(String matricNumber,
 			String courseCode, String courseIndex) {
-		// List list = getRegisteredList();
+		List list = getCoursesRegistered(matricNumber);
 		List<StudentCourse> studentList = new ArrayList<StudentCourse>();
 
 		try {
-			for (int i = 0; i < studentList.size(); i++) {
-				StudentCourse studC = (StudentCourse) studentList.get(i);
+			for (int i = 0; i < list.size(); i++) {
+				StudentCourse studC = (StudentCourse) list.get(i);
 
 				if (studC.getMatricNumber().equals(matricNumber)
 						&& studC.getCourseCode().equals(courseCode)
@@ -99,15 +105,14 @@ public class StudentCourse implements Serializable {
 					save(studentList);
 					System.out.println("Course " + courseCode + ","
 							+ courseIndex + " has been dropped.");
-				}
 
+					// ********* ADD VACANCY TO THE COURSE********
+
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("Fail to drop.");
 		}
-
-		System.out.println("Course " + courseCode + "," + courseIndex
-				+ " has been dropped.");
 	}
 
 	// check if a student exist
@@ -124,11 +129,7 @@ public class StudentCourse implements Serializable {
 	}
 
 	private static void save(List list) {
-		boolean success = FileIO.writeToFile("studentRecords.dat", list);
-		if (success = true)
-			System.out.println("OK");
-		else
-			System.out.println("Failed");
+		FileIO.writeToFile("studentRecords.dat", list);
 	}
 
 }
