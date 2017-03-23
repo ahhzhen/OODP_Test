@@ -1,55 +1,70 @@
 import java.util.*;
 
 public class Course {
-	// test???
 	private String name;
 	private String courseCode;
 	private String school;
-	private int cindex;
 	private ArrayList<CourseIndex> cIndexList;
-
-	public Course(String courseCode) {
-		this.courseCode = courseCode;
-	}
+	private ArrayList<Course> cCourseList;
 
 	public Course() {
+	}
 
+	public Course(String n, String cc, String s) {
+		name = n;
+		courseCode = cc;
+		school = s;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getCourseCode() {
 		return courseCode;
 	}
-	public String getSchool()
-	{
-		return school;
-		
+
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
 	}
 
-	public int getCourseIndexes(int courseindex)
-	{
-		cindex=courseindex;
-		return cindex;
+	public String getSchool() {
+		return school;
 	}
-	public void UpdateIndex(int cIndex, int vacancy)
-	{
-		for(int i=0; i<cIndexList.size(); i++)
-		{
-			if(Integer.parseInt(cIndexList.get(i).toString())==cIndex)
-			{
-				System.out.println("Index exist");
+
+	public void setSchool(String school) {
+		this.school = school;
+	}
+
+	public ArrayList<Course> getcCourseList() {
+		return cCourseList;
+	}
+
+	public boolean courseExist(String courseCode) {
+		/*if (cCourseList != null) {
+			for (int i = 0; i < cCourseList.size(); i++) {
+				Course course = cCourseList.get(i);
+				if (course.getCourseCode() == courseCode)
+					return true;
 			}
-			else
-			{
-				cIndexList.get(i).UpdateIndex(vacancy);
-				cIndexList.get(i).UpdateVacancy(vacancy);
-			}
-		}
-		//check arraylist for matching index'
-		//switch with new index
+		}*/
+		return (courseCode == this.courseCode);		
 	}
-	public void UpdateVacancy(int cindex, int nindex)
-	{
-	
+
+	public void updateIndex(int oldIndex, int newIndex, String courseCode) {//can be 2 args
+		CourseIndex ci = new CourseIndex();
+		ci.updateIndex(oldIndex, newIndex, courseCode);
 	}
-	
+
+	public ArrayList<CourseIndex> getcIndexList() {
+		return cIndexList;
+	}
+
+	public void AddtocIndexList(int index, int vacancy, String gname) {//, Lesson tut, Lesson lab) {
+		this.cIndexList.add(new CourseIndex(index, vacancy, gname));
+	}
 }

@@ -1,53 +1,60 @@
- import java.util.ArrayList;
-  
-  public class CourseIndex {
-  	private int vacancy;
-  	private int index;
-  	private String courseCode;
-  	public int getVacancy() {
+import java.util.ArrayList;
+
+public class CourseIndex extends Course {
+	private int index;
+	private int vacancy;
+	private String groupName;
+	//private Lesson tutorial;
+	//private Lesson lab;
+	
+	//private String name;
+	//private String courseCode;
+	//private String school;
+	private ArrayList<CourseIndex> cIndexList;
+	private ArrayList<CourseIndex> coursesList;
+	
+	public CourseIndex(int index, int vacancy, String gname) {//, Lesson tut, Lesson lab) {
+		this.index = index;
+		this.vacancy = vacancy;
+		this.groupName = gname;
+		//this.tutorial = tut;
+		//this.lab = lab;
+	}
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public int getVacancy() {
 		return vacancy;
 	}
 
-	//private ArrayList<timeSlot> lessons = new ArrayList<timeSlot>();
-  	public CourseIndex(int in, int vac)
-  	{
-  		vacancy = vac;
-  		index = in;
-  	}
-  	public CourseIndex(String cCode, int in, int vac)
-  	{
-  		courseCode=cCode;
-  		vacancy=vac;
-  		index=in;
-  	}
-  	public CourseIndex() {
-		// TODO Auto-generated constructor stub
+	public void setVacancy(int vacancy) {
+		this.vacancy = vacancy;
 	}
-	public int getIndex()
-  	{
-  		return index;
-  	}
-  	
-  	public void setIndex(int index) {
-		this.index = index;
+
+	public void decrementVacancy() {
+		if (vacancy > 0)
+			vacancy--;
 	}
-	public void UpdateIndex(int index)
-  	{
-  		
-  	}
-  	public void UpdateVacancy(int vacancy)
-  	{
-  		
-  	}
-  	public void Increase() {
-  		vacancy++;
-  	}
-  
-  	public void Decrease() {
-  		if (vacancy != 0) {
-  			vacancy--;
-  		} else {
-  			System.out.println("Index is full");
-  		}
-  	}
-  }
+	
+
+	public String getCourseCode() {
+		return courseCode;
+	}
+
+	public boolean indexExist(int index) {
+		/*if (cIndexList != null) {
+			for (int i = 0; i < cIndexList.size(); i++) {
+				CourseIndex cIndex = cIndexList.get(i);
+				if (cIndex.getIndex() == index) {
+					return true;
+				}
+			}
+		}*/
+		return (index == this.index);
+	}
+}
