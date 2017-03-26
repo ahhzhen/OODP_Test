@@ -10,8 +10,8 @@ public class CourseIndex extends Course {
 	//private String name;
 	//private String courseCode;
 	//private String school;
-	private ArrayList<CourseIndex> cIndexList;
-	private ArrayList<CourseIndex> coursesList;
+	//private ArrayList<CourseIndex> cIndexList;
+	//private ArrayList<CourseIndex> coursesList;
 	
 	public CourseIndex(int index, int vacancy, String gname) {//, Lesson tut, Lesson lab) {
 		this.index = index;
@@ -42,9 +42,9 @@ public class CourseIndex extends Course {
 	}
 	
 
-	public String getCourseCode() {
+	/*public String getCourseCode() {
 		return courseCode;
-	}
+	}*/
 
 	public boolean indexExist(int index) {
 		/*if (cIndexList != null) {
