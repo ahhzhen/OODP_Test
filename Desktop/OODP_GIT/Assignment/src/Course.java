@@ -6,9 +6,12 @@ public class Course {
 	private String school;
 	private int indexPointer;
 	private ArrayList<CourseIndex> cIndexList;
-	private ArrayList<Course> cCourseList;
+	//private ArrayList<Course> cCourseList;
 
 	public Course() {
+		name = "";
+		courseCode = "";
+		school = "";
 	}
 
 	public Course(String n, String cc, String s) {
@@ -71,7 +74,7 @@ public class Course {
 		if(selectIndex(index))
 		{
 			cIndexList.get(indexPointer).setVacancy(vacancy);
-			System.out.println("Vacancy updated.")
+			System.out.println("Vacancy updated.");
 		}
 		else
 			System.out.println("Update failed");
@@ -87,14 +90,18 @@ public class Course {
 	
 	public boolean selectIndex(int index)
 	{
-		for (int = 0; i<cIndexList.size(); i++)
+		for (int i = 0; i<cIndexList.size(); i++)
 		{
 			if(cIndexList.get(i).indexExist(index))
+			{
 				indexPointer = i;
 				return true;
+			}
 			else
-				System.out.println("Index not found.")
+			{
+				//System.out.println("Index not found.");
 				return false;
+			}
 		}
 	}
 }

@@ -2,13 +2,13 @@ import java.util.*;
 import java.util.zip.InflaterOutputStream;
 public class AdminCourse {
 
-	Course cPointer=new Course();
 	static Scanner input = new Scanner(System.in);
 	private String name;
 	private String courseCode;
 	private String school;
 	private int nindex;
 	private int oindex;
+	private Course cPointer = new Course();
 	
 	public void setCourseCode(String courseCode) {
 		this.courseCode = courseCode;
@@ -41,24 +41,60 @@ public class AdminCourse {
 			list = new ArrayList();
 		return list;
 	}
-
+	
+	public boolean searchCourse(String courseCode)
+	{
+		List list = getCourseList();
+		List<Course> courseList= new ArrayList<Course>();
+		try{
+			for (int i = 0; i<list.size(); i++)
+				if (courseList.get(i).courseExist(courseCode))
+				{
+					cPointer = courseList.get(i);
+					return true;
+				}
+		} catch (Exception e) {
+			
+		}
+		return false;
+	}
+	
+	public boolean searchIndex(int index)
+	{
+		if(cPointer != null)
+		{
+			return cPointer.selectIndex(index);
+		}
+		return false;
+	}
+	
 	public void updateCourseIndex(int oldIndex, int newIndex, String courseCode) {
 		List list = getCourseList();
 		List<Course> courseList = new ArrayList<Course>();
 		try {
 			for (int i = 0; i < list.size(); i++) {
 				//Course c = (Course) list.get(i);
-				if (courseList.get(i).getCourseCode().equals(courseCode)) { //there exists a Course in courseList with the given courseCode
-					cPointer = courseList.get(i); //cPointer points to current Course
-					for (int k = 0; k < cPointer.getcIndexList().size(); k++) { //for the list of CourseIndexes, find the index to update
-						if (cPointer.getcIndexList().get(k).getIndex() == oldIndex)
-						{
-							cPointer.getcIndexList().get(k).setIndex(newIndex);
-						}
-					}
+				if (courseList.get(i).courseExist(courseCode)) { //there exists a Course in courseList with the given courseCode
+					courseList.get(i).updateIndex(oldIndex, newIndex); //selected Course
 				}
 			}
 		} catch (Exception e) {
+		}
+	}
+	
+	public void updateVacancy(String courseCode,int index,int vacancy) {
+		List list = getCourseList();
+		List<Course> courseList = new ArrayList<Course>();
+		try{
+			for (int i = 0;i < list.size(); i++)
+			{
+				if(courseList.get(i).courseExist(courseCode))
+				{
+					courseList.get(i).updateVacancy(index, vacancy);
+				}
+			}
+		}catch (Exception e) {
+			
 		}
 	}
 
@@ -80,7 +116,7 @@ public class AdminCourse {
 			case 1:
 				System.out.print("Enter the new course code for " + name);
 				this.setCourseCode(input.nextLine());
-				if(!cPointer.courseExist(courseCode))
+				if(!searchCourse(courseCode))
 				{
 					System.out.print("Course does not exist");
 				}
@@ -101,7 +137,7 @@ public class AdminCourse {
 			case 3:
 				System.out.print("Enter course code for index: ");
 				int oldIndex = input.nextInt();
-				if (cPointer.courseExist((courseCode)) {
+				if (searchCourse(courseCode)) {
 					System.out.print("Please enter the new index number: ");
 					int newIndex = input.nextInt();
 					updateCourseIndex(oindex, nindex, courseCode);
@@ -110,8 +146,16 @@ public class AdminCourse {
 			case 4:
 				/*System.out.print("Enter the course code: ");
 				this.setCourseCode(input.nextLine());
-				if(course.courseExist(courseCode))
+				if(searchCourse(courseCode))
 				{
+					System.out.print("Enter the index: ");
+					int index = input.nextInt();
+					if(searchIndex(index))
+					{
+						System.out.print("Enter the vacancy to be set: ");
+						int vac = input.nextInt();
+						this.updateVacancy(courseCode,index,vac);
+					}
 				}*/
 				break;
 			default:
