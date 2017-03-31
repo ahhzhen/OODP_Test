@@ -41,6 +41,10 @@ public class CourseIndex extends Course {
 			vacancy--;
 	}
 	
+	public void incrementVacancy() {
+		vacancy++;
+	}
+	
 
 	/*public String getCourseCode() {
 		return courseCode;

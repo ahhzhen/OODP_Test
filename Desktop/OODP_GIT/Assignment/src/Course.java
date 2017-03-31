@@ -5,8 +5,8 @@ public class Course {
 	private String courseCode;
 	private String school;
 	private int indexPointer;
-	private static ArrayList<CourseIndex> cIndexList;
-	private static ArrayList<Course> courseList;
+	private ArrayList<CourseIndex> cIndexList;
+	//private static ArrayList<Course> courseList; //StudentCourse will hold the courseList
 
 	public Course() {
 		name = "";
@@ -44,18 +44,11 @@ public class Course {
 		this.school = school;
 	}
 	
-	public static ArrayList<Course> getCourseList() {
-		return courseList;
-	}
+	//public static ArrayList<Course> getCourseList() {
+	//	return courseList; //see above
+	//}
 
 	public boolean courseExist(String courseCode) {
-		/*if (cCourseList != null) {
-			for (int i = 0; i < cCourseList.size(); i++) {
-				Course course = cCourseList.get(i);
-				if (course.getCourseCode() == courseCode)
-					return true;
-			}
-		}*/
 		return (courseCode == this.courseCode);		
 	}
 
@@ -80,10 +73,42 @@ public class Course {
 			System.out.println("Update failed");
 	}
 	
-	public static ArrayList<CourseIndex> getcIndexList() {
+	public ArrayList<CourseIndex> getcIndexList() {
 		return cIndexList;
 	}
-
+	
+	public void minusFromIndex(int index)
+	{
+		if(selectIndex(index))
+		{
+			cIndexList.get(indexPointer).decrementVacancy();
+			System.out.println("Vacancy decremented.");
+		}
+		else
+			System.out.println("Decrement failed.");
+	}
+	
+	public void addToIndex(int index)
+	{
+		if(selectIndex(index))
+		{
+			cIndexList.get(indexPointer).incrementVacancy();
+			System.out.println("Vacancy incremented.");
+		}
+		else
+			System.out.println("Increment failed.");
+	}
+	
+	public int retrieveVacancy(int index)
+	{
+		if(selectIndex(index))
+			return cIndexList.get(indexPointer).getVacancy();
+		else
+		{
+			System.out.println("Error when retrieving value.");
+			return -1;
+		}
+	}
 	public void AddtocIndexList(int index, int vacancy, String gname) {//, Lesson tut, Lesson lab) {
 		this.cIndexList.add(new CourseIndex(index, vacancy, gname));
 	}
