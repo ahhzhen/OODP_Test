@@ -5,8 +5,8 @@ public class Course {
 	private String courseCode;
 	private String school;
 	private int indexPointer;
-	private ArrayList<CourseIndex> cIndexList;
-	//private ArrayList<Course> cCourseList;
+	private static ArrayList<CourseIndex> cIndexList;
+	private static ArrayList<Course> courseList;
 
 	public Course() {
 		name = "";
@@ -44,8 +44,8 @@ public class Course {
 		this.school = school;
 	}
 	
-	public ArrayList<Course> getcCourseList() {
-		return cCourseList;
+	public static ArrayList<Course> getCourseList() {
+		return courseList;
 	}
 
 	public boolean courseExist(String courseCode) {
@@ -80,7 +80,7 @@ public class Course {
 			System.out.println("Update failed");
 	}
 	
-	public ArrayList<CourseIndex> getcIndexList() {
+	public static ArrayList<CourseIndex> getcIndexList() {
 		return cIndexList;
 	}
 
@@ -97,11 +97,8 @@ public class Course {
 				indexPointer = i;
 				return true;
 			}
-			else
-			{
-				//System.out.println("Index not found.");
-				return false;
-			}
 		}
+		System.out.println("Index not found.");
+		return false;
 	}
 }

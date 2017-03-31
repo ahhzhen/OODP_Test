@@ -54,12 +54,22 @@ public class Student extends User {
 	}
 
 	public void addCourse() {
-		String courseCode, courseIndex;
+		String courseCode;
+		int courseIndex;
 		Scanner scannerInput = new Scanner(System.in);
+		List<Course> cList=Course.getCourseList();
+		
+//		//print a list of available courses & it's code.
+//		for(int i=0;i<cList.size();i++)
+//		{
+//			Course course = (Course) cList.get(i);
+//			System.out.println(course);
+//		}
+		
 		System.out.println("Please enter course code you wish to add:");
 		courseCode = scannerInput.nextLine();
 		System.out.println("Please enter course index you wish to add:");
-		courseIndex = scannerInput.nextLine();
+		courseIndex = scannerInput.nextInt();
 
 		StudentCourse.registerStudent(matricNo, courseCode, courseIndex);
 	}
@@ -80,12 +90,13 @@ public class Student extends User {
 			}
 		}
 
-		String courseCode, courseIndex;
+		String courseCode;
+		int courseIndex;
 		Scanner scannerInput = new Scanner(System.in);
 		System.out.println("Please enter course code you wish to drop:");
 		courseCode = scannerInput.nextLine();
 		System.out.println("Please enter course index you wish to drop:");
-		courseIndex = scannerInput.nextLine();
+		courseIndex = scannerInput.nextInt();
 
 		StudentCourse.unregisterStudent(matricNo, courseCode, courseIndex);
 	}
@@ -114,15 +125,16 @@ public class Student extends User {
 	}
 
 	public void changeIndexNumber() {
-		String courseCode,newIndex,oldIndex;
+		String courseCode;
+		int newIndex,oldIndex;
 		Scanner scanInput = new Scanner(System.in);
 		
 		System.out.println("Enter course code:");
 		courseCode = scanInput.nextLine();
 		System.out.println("Enter old course index:");
-		oldIndex=scanInput.nextLine();
+		oldIndex=scanInput.nextInt();
 		System.out.println("Enter new course index:");
-		newIndex=scanInput.nextLine();
+		newIndex=scanInput.nextInt();
 		
 		StudentCourse.updateCourseIndex(courseCode,oldIndex,newIndex);
 		

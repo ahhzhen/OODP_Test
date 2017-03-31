@@ -10,10 +10,10 @@ public class StudentCourse implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String matricNumber;
 	private String courseCode;
-	private String courseIndex;
+	private int courseIndex;
 
 	public StudentCourse(String matricNumber, String courseCode,
-			String courseIndex) {
+			int courseIndex) {
 		super();
 		this.matricNumber = matricNumber;
 		this.courseCode = courseCode;
@@ -28,7 +28,7 @@ public class StudentCourse implements Serializable {
 		return courseCode;
 	}
 
-	public String getCourseIndex() {
+	public int getCourseIndex() {
 		return courseIndex;
 	}
 
@@ -36,10 +36,10 @@ public class StudentCourse implements Serializable {
 		this.courseCode = courseCode;
 	}
 
-	public void setCourseIndex(String courseIndex) {
+	public void setCourseIndex(int courseIndex) {
 		this.courseIndex = courseIndex;
 	}
-	
+
 	public static List getRegisteredList() {
 		return getRegisteredList("studentRecords.dat");
 	}
@@ -72,23 +72,48 @@ public class StudentCourse implements Serializable {
 	}
 
 	// add a new entry of student record
-	public static boolean registerStudent(String matricNumber,
-			String courseCode, String courseGroup) {
+	public static boolean registerStudent(String matricNumber,String courseCode, int courseIndex) {
 		List<StudentCourse> list = getRegisteredList();
-
+		List<Course> courseList = Course.getCourseList();
+		List<CourseIndex>courseIndexList = Course.getcIndexList();
 		try {
 
 			// *******Check that such a courseCode exist & it has vacancy******
+			
+//			for (int i = 0; i < courseList.size(); i++) 
+//			{
+//				Course course = (Course) courseList.get(i);
+//				CourseIndex cIndex = (CourseIndex)courseIndexList.get(i);
+//				if (course.getCourseCode().equals(courseCode))  //check if courseCode exist
+//				{
+//					
+//					if(cIndex.getVacancy() >0) //Check if it has vacancy
+//					{
+						if (!studentExist(matricNumber, courseCode)) {
+							StudentCourse studC = new StudentCourse(matricNumber,
+									courseCode, courseIndex);
+							list.add(studC);
+							saveStudent(list);
+							System.out.println("Course " + courseCode + "," + courseIndex
+									+ " has been registered.");
 
-			if (!studentExist(matricNumber, courseCode)) {
-				StudentCourse studC = new StudentCourse(matricNumber,
-						courseCode, courseGroup);
-				list.add(studC);
-				saveStudent(list);
-				System.out.println("Course " + courseCode + "," + courseGroup
-						+ " has been registered.");
+						}
+//						course.updateVacancy(courseIndex,(cIndex.getVacancy()-1));
+//					}
+//					else if(cIndex.getVacancy()<=0)
+//					{
+//						System.out.println("No vacancy");
+//						return false;
+//					}
+//				}
+//				else
+//				{
+//					System.out.println("Incorrect courseIndex.");
+//					return false;
+//				}
+//			}
 
-			}
+			
 		} catch (Exception e) {
 			return false;
 		}
@@ -98,7 +123,7 @@ public class StudentCourse implements Serializable {
 
 	// delete a entry of student record
 	public static void unregisterStudent(String matricNumber,
-			String courseCode, String courseIndex) {
+			String courseCode, int courseIndex) {
 		List<StudentCourse> list = getCoursesRegistered(matricNumber);
 
 		try {
@@ -107,7 +132,7 @@ public class StudentCourse implements Serializable {
 
 				if (studC.getMatricNumber().equals(matricNumber)
 						&& studC.getCourseCode().equals(courseCode)
-						&& studC.getCourseIndex().equals(courseIndex)) {
+						&& studC.getCourseIndex() == courseIndex) {
 					list.remove(studC);
 					saveStudent(list);
 					System.out.println("Course " + courseCode + ","
@@ -138,34 +163,33 @@ public class StudentCourse implements Serializable {
 	private static void saveStudent(List list) {
 		FileIO.writeToFile("studentRecords.dat", list);
 	}
+
 	private static void saveCourse(List list) {
 		FileIO.writeToFile("courseRecords.dat", list);
 	}
-	public static void updateCourseIndex(String courseCode,String oldIndex,String newIndex){
+
+	public static void updateCourseIndex(String courseCode, int oldIndex,
+			int newIndex) {
 		List<StudentCourse> list = getRegisteredList();
-		int found=0;
-		
-		for(int i=0;i<list.size();i++)
-		{
+		int found = 0;
+
+		for (int i = 0; i < list.size(); i++) {
 			StudentCourse studC = (StudentCourse) list.get(i);
-			if(studC.getCourseCode().equals(courseCode))
-			{
-				if(studC.getCourseIndex().equals(oldIndex))
-				{
+			if (studC.getCourseCode().equals(courseCode)) {
+				if (studC.getCourseIndex() == oldIndex) {
 					found++;
 					studC.setCourseIndex(newIndex);
 					saveStudent(list);
-					System.out.println("Index for course "+courseCode+ " has been changed from "+oldIndex+" to "+ newIndex+" .");
+					System.out.println("Index for course " + courseCode
+							+ " has been changed from " + oldIndex + " to "
+							+ newIndex + " .");
 				}
-					
+
 			}
 		}
-		if(found==0)
+		if (found == 0)
 			System.out.println("Course code/course index does not exist.");
-		
-		
-	}
 
-	
+	}
 
 }
