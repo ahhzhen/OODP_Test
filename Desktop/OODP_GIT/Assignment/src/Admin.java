@@ -212,7 +212,7 @@ public class Admin extends User
 		}
 	}
 
-	public void printStudentListByCourse(){
+	public void printStudentListByCourse() {
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Please enter Course Code:");
 		String courseCode = sc.next();
