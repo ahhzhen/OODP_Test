@@ -15,7 +15,14 @@ public class STARSApp
 		String str = "abdced";
 		uList.add("123456;" + str.hashCode() + ";Admin");
 		uList.add("aaa074;" + "123456".hashCode() + ";Student");
-		System.out.println("2Welcome~\nPlease Login");
+		uList.add("bbb123;" + "654321".hashCode() + ";Student");
+		List studList = new ArrayList();
+		Student StudentA = new Student("aaa074", Integer.toString("123456".hashCode()), "U1620736G", "Student1", 'F', "Singaporean");
+		Student StudentB = new Student("bbb123", Integer.toString("654321".hashCode()), "U1622603D", "Student2", 'F', "Singaporean");
+		studList.add(StudentA);
+		studList.add(StudentB);
+		FileIO.writeToFile("studentList.dat", studList);
+		System.out.println("Welcome~\nPlease Login");
 		while (login == false) {
 			while (choice != 1 && choice != 2) {
 				System.out
@@ -38,26 +45,10 @@ public class STARSApp
 			pw = input.next();
 
 			login = checkLogin(uList, user, pw, type);
-			choice = 0;
+			choice = -1;
 		}
 		userSession = createUser(user, type);
-		while (choice != 7) {
-			userSession.displayMenu();
-			System.out.println("Please select choice from menu: ");
-			int in = input.nextInt();
-			try 
-			{
-				choice = in;
-			} 
-			catch (Exception e) 
-			{
-				input.nextLine();
-			}
-			if (userSession instanceof Student)
-				studentMenu((Student) userSession, choice);
-			else
-				adminMenu((Admin) userSession, choice);
-		}
+		userSession.startSession();
 	}
 
 	public static boolean checkLogin(ArrayList<String> uList, String user,
@@ -80,59 +71,9 @@ public class STARSApp
 	public static User createUser(String username, String type) {
 		User u;
 		if (type.equals("Student"))
-			u = new Student(username, "U1620736G", "Student1", 'F',
-					"Singaporean");
+			u = new Student(username, Integer.toString("123456".hashCode()) , "U1620736G", "Student1", 'F', "Singaporean");
 		else
 			u = new Admin(username);
 		return u;
-	}
-
-	public static void studentMenu(Student stud, int choice) {
-		switch (choice) {
-		case 1:
-			stud.addCourse();
-			break;
-		case 2:
-			stud.dropCourse();
-			break;
-		case 3:
-			stud.checkOrPrintCoursesRegistered();
-			break;
-		case 4:
-			stud.checkVacanciesAvailable();
-			break;
-		case 5:
-			stud.changeIndexNumber();
-			break;
-		case 6:
-			stud.swopIndexNumber();
-			break;
-		case 7:
-			stud.quit();
-			break;
-		default:
-			System.out.println("Wrong input detected, please try again!");
-		}
-	}
-
-	public static void adminMenu(Admin adm, int choice) {
-		switch (choice) {
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5: // jeanelle first commit
-			break;
-		case 6:
-			break;
-		case 7:
-			break;
-		default:
-			System.out.println("Wrong input detected, please try again!");
-		}
 	}
 }

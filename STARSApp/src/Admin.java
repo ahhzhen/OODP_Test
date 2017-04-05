@@ -16,6 +16,44 @@ public class Admin extends User
 		super(u);
 	}
 
+	void startSession() {
+		// TODO Auto-generated method stub
+		int choice = -1;
+		Scanner input = new Scanner(System.in);
+		while(choice!= 0)
+		{
+			displayMenu();
+			System.out.println("Please select choice from menu: ");
+			try{
+				choice = input.nextInt();
+				}
+			catch(Exception e)
+				{input.next();}
+			
+			switch(choice)
+			{
+			case 1: 
+				break;
+			case 2:
+				break;
+			case 3: addCourse();
+				break;
+			case 4:
+				break;
+			case 5: 
+				break;
+			case 6:
+				break;
+			case 7:
+				break;
+			case 0:
+				System.out.println("Program exiting....");
+				break;
+			default:System.out.println("Wrong input detected, please try again!");
+			}
+		}
+	}
+	
 	private void establishDB(){
 		try {
 			//Retrieve from db StudentList

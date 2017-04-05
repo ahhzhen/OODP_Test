@@ -1,48 +1,91 @@
 import java.util.*;
 import java.io.*;
 
-public class Student extends User {
-	private static String matricNo;
+public class Student extends User implements Serializable {
+	private String matricNo;
 	private String name;
 	private char gender;
 	private String nationality;
 	private Date start;
 	private Date end;
-
-	public Student(String username, String matricNumber, String name,
-			char gender, String nationality) {
-		super(username);
-		this.matricNo = matricNumber;
+	private CourseIndex[] cList;
+	
+	
+	 //create linked list
+    LinkedList<studentRecords> list = new LinkedList<studentRecords>();    
+    String inFile = "studentRecords.txt";
+    //inititate readers to null
+    FileReader fr = null;
+    BufferedReader br = null;
+    
+	Student(String username, String password, String matricNo, String name, char gender, String nationality)
+	{
+		super(username,password,"Student");
+		this.matricNo = matricNo;
 		this.name = name;
 		this.gender = gender;
 		this.nationality = nationality;
 	}
-
-	public static String getMatricNo() {
-		return matricNo;
+	
+	public String getMatricNo(){return matricNo;}
+	
+	public String getName(){return name;}
+	
+	public char getGender(){return gender;}
+	
+	public String getNationality(){return nationality;}
+	
+	public Date getStartDate(){return start;}
+	
+	public Date getEndDate(){return end;}
+	
+	public void startSession()
+	{
+		int choice = -1;
+		Scanner input = new Scanner(System.in);
+		while(choice!= 0)
+		{
+			displayMenu();
+			System.out.println("Please select choice from menu: ");
+			try{
+				choice = input.nextInt();
+			}
+			catch(Exception e)
+				{input.next();}
+		
+			switch(choice)
+			{
+			case 1: 
+				addCourse();
+				break;
+			case 2:
+				dropCourse();
+				break;
+			case 3:
+				checkOrPrintCoursesRegistered();
+				break;
+			case 4:
+				checkVacanciesAvailable();
+				break;
+			case 5:
+				changeIndexNumber();
+				break;
+			case 6:
+				swopIndexNumber();
+				break;
+			case 7:
+				quit();
+				break;
+			case 0:
+				System.out.println("Program exiting....");
+				break;
+			default:System.out.println("Wrong input detected, please try again!");
+			}
+		}
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public char getGender() {
-		return gender;
-	}
-
-	public String getNationality() {
-		return nationality;
-	}
-
-	public Date getStartDate() {
-		return start;
-	}
-
-	public Date getEndDate() {
-		return end;
-	}
-
-	public void displayMenu() {
+	
+	public void displayMenu()
+	{
 		System.out.println("");
 		System.out.println("1. Add Course");
 		System.out.println("2. Drop Course");
@@ -54,53 +97,47 @@ public class Student extends User {
 	}
 
 	public void addCourse() {
-		String courseCode;
-		int courseIndex;
-		Scanner scannerInput = new Scanner(System.in);
-		//List<Course> cList=Course.getCourseList();
-		
-//		//print a list of available courses & it's code.
-//		for(int i=0;i<cList.size();i++)
-//		{
-//			Course course = (Course) cList.get(i);
-//			System.out.println(course);
-//		}
-		
-		System.out.println("Please enter course code you wish to add:");
-		courseCode = scannerInput.nextLine();
-		System.out.println("Please enter course index you wish to add:");
-		courseIndex = scannerInput.nextInt();
-
-		StudentCourse.registerStudent(matricNo, courseCode, courseIndex);
+		StudentCourse.registerStudent(matricNo);
 	}
-
-	public void dropCourse() {
-		List<StudentCourse> list = StudentCourse.getCoursesRegistered(getMatricNo());
-		
-		if (list.size() == 0)
-			System.out.println("No Courses registered");
-		else
+	
+	public static Student getStudentByUsername(String username)
+	{
+		Student s = null;
+		List studList = getStudentList();
+		for(int i = 0; i < studList.size();i++)
 		{
-			System.out.println("Courses registered:");
-			System.out.println("------------------------------------------");
-			for (int i = 0; i < list.size(); i++) {
-				System.out.println("CourseCode: " + list.get(i).getCourseCode());
-				System.out.println("CourseIndex: " + list.get(i).getCourseIndex());
-				System.out.println("------------------------------------------");
-			}
+			Student stud = (Student)studList.get(i);
+			if(stud.getUsername().equals(username))
+				return stud;
 		}
-
-		String courseCode;
-		int courseIndex;
-		Scanner scannerInput = new Scanner(System.in);
-		System.out.println("Please enter course code you wish to drop:");
-		courseCode = scannerInput.nextLine();
-		System.out.println("Please enter course index you wish to drop:");
-		courseIndex = scannerInput.nextInt();
-
-		StudentCourse.unregisterStudent(matricNo, courseCode, courseIndex);
+		return s;
 	}
-
+	
+	public static Student getStudentByMatric(String matricNo)
+	{
+		Student s = null;
+		List studList = getStudentList();
+		for(int i = 0; i < studList.size();i++)
+		{
+			Student stud = (Student)studList.get(i);
+			if(stud.getMatricNo().equals(matricNo))
+				return stud;
+		}
+		return s;
+	}
+	
+/*	public static boolean checkPassword(String password)
+	{
+		PasswordHash pHash = new PasswordHash();
+		if(pHash.hash(password).equals(getPassword()))
+			return true;
+		return false;
+	}*/
+	
+	public void dropCourse() {
+		StudentCourse.unregisterStudent(matricNo);
+	}
+	
 	public void checkOrPrintCoursesRegistered() {
 		// TODO Auto-generated method stub
 		List<StudentCourse> list = StudentCourse.getCoursesRegistered(matricNo);
@@ -116,35 +153,45 @@ public class Student extends User {
 				System.out.println("------------------------------------------");
 			}
 		}
-
 	}
 
 	public int checkVacanciesAvailable() {
 
 		return -1;
 	}
-
+	
 	public void changeIndexNumber() {
-		String courseCode;
-		int newIndex,oldIndex;
-		Scanner scanInput = new Scanner(System.in);
-		
-		System.out.println("Enter course code:");
-		courseCode = scanInput.nextLine();
-		System.out.println("Enter old course index:");
-		oldIndex=scanInput.nextInt();
-		System.out.println("Enter new course index:");
-		newIndex=scanInput.nextInt();
-		
-		StudentCourse.updateCourseIndex(courseCode,oldIndex,newIndex);
-		
+		StudentCourse.changeCourseIndex(matricNo);
 	}
 
 	public void swopIndexNumber() {
-
+		StudentCourse.swapCourse(matricNo);
 	}
 
 	public void quit() {
 		System.out.println("Thank you for using STARSApp");
 	}
+	
+	public static List getStudentList()
+	{
+		return getStudentList("studentList.dat");
+	}
+	
+	public static List getStudentList(String filename)
+	{
+		List list = null;
+		try {
+			list = FileIO.readInFile(filename);
+		} catch (Exception e) {
+		}
+		if (list == null)
+			list = new ArrayList();
+		return list;
+	}
+	
+	public void save(List list)
+	{
+		FileIO.writeToFile("studentList.dat", list);
+	}
+
 }
