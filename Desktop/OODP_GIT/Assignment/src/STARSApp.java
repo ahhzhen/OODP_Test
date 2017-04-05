@@ -14,7 +14,7 @@ public class STARSApp {
 		String str = "abdced";
 		uList.add("123456;" + str.hashCode() + ";Admin");
 		uList.add("aaa074;" + "123456".hashCode() + ";Student");
-		System.out.println("Welcome~\nPlease Login");
+		System.out.println("2Welcome~\nPlease Login");
 		while (login == false) {
 			while (choice != 1 && choice != 2) {
 				System.out

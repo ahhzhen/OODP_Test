@@ -71,6 +71,21 @@ public class Admin extends User
 
 
 	}
+	public static List getRegisteredList() {
+		return getRegisteredList("studentRecords.dat");
+	}
+
+	public static List getRegisteredList(String fileName) {
+		List list = null;
+		try {
+			list = FileIO.readInFile(fileName);
+		} catch (Exception e) {
+		}
+		if (list == null)
+			list = new ArrayList();
+		return list;
+	}
+
 	public void addStudent()
 	{
 		String u; 
@@ -98,6 +113,7 @@ public class Admin extends User
 
 	public void addCourse()
 	{
+		Scanner sc = new Scanner(System.in);
 		String courseCode;
 		String courseSchool;
 		ArrayList<Integer> courseIndex = new ArrayList<Integer>();
@@ -181,14 +197,38 @@ public class Admin extends User
 				System.out.println(studentList.get(i).get(0));
 			}
 		}
+		
+		//Query "studentRecords.dat", print students registered for specified index  
+		List list = getRegisteredList();
+		System.out.println("Students registered in Index "+indexNo);
+		try {;
+			for (int i = 0; i < list.size(); i++) {
+				StudentCourse studC = (StudentCourse) list.get(i);
+				if (studC.getCourseIndex()==indexNo){
+					System.out.println(studC.getMatricNumber());
+				}
+			}
+		} catch (Exception e) {
+		}
 	}
 
 	public void printStudentListByCourse(){
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Please enter Course Code:");
 		String courseCode = sc.next();
-		/*query db*/
-		/*print list of students*/
+
+		//Query "studentRecords.dat", print students registered for specified course 
+		List list = getRegisteredList();
+		System.out.println("Students registered in Course "+courseCode);
+		try {;
+			for (int i = 0; i < list.size(); i++) {
+				StudentCourse studC = (StudentCourse) list.get(i);
+				if (studC.getCourseCode().equals(courseCode)){
+					System.out.println(studC.getMatricNumber());
+				}
+			}
+		} catch (Exception e) {
+		}
 	}
 
 	public void displayMenu()
