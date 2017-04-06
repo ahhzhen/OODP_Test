@@ -13,30 +13,30 @@ public class Admin extends User {
 		while (choice != 7) {
 			displayMenu();
 			System.out.println("Please select choice from menu: ");
-			int in = input.nextInt();
 			try {
+				int in = input.nextInt();
 				choice = in;
 				switch (choice) {
 				case 1:
-					adminc.editStudentAccessPeriod();
+					// adminc.editStudentAccessPeriod();
 					break;
 				case 2:
-					adminc.addStudent();
+					// adminc.addStudent();
 					break;
 				case 3:
-					adminc.modifyCourse();
+					modifyCourse();
 					break;
 				case 4:
 					adminc.checkVacancies();
 					break;
 				case 5:
-					adminc.printStudentListByIndex();
+					printStudentListByIndex();
 					break;
 				case 6:
 					adminc.printStudentListByCourse();
 					break;
 				case 7:
-					adminc.quit();
+					// adminc.quit();
 					break;
 				default:
 					System.out.println("Wrong input detected, please try again!");
@@ -57,3 +57,25 @@ public class Admin extends User {
 		System.out.println("6. Print Student List By Course");
 		System.out.println("7. Quit");
 	}
+
+	public void modifyCourse() {
+		Scanner sc = new Scanner(System.in);
+		AdminCourse adminc = new AdminCourse();
+		System.out.println("1. Add Course");
+		System.out.println("2. Update Course");
+		int input = sc.nextInt();
+		switch (input) {
+		case 1:
+			adminc.addCourse();
+			break;
+		case 2:
+			adminc.updateCourse();
+		default:
+			System.out.println("Please enter either choice 1 or 2");
+		}
+	}
+	public void printStudentListByIndex(){
+		AdminCourse adminc=new AdminCourse();
+		adminc.printStudentListByIndex();
+	}
+}

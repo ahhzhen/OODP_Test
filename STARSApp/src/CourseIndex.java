@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class CourseIndex extends Course {
 	private int index;
@@ -10,7 +11,7 @@ public class CourseIndex extends Course {
 	//private String name;
 	//private String courseCode;
 	//private String school;
-	//private ArrayList<CourseIndex> cIndexList;
+	private ArrayList<CourseIndex> cIndexList;
 	//private ArrayList<CourseIndex> coursesList;
 	
 	public CourseIndex(int index, int vacancy, String gname) {//, Lesson tut, Lesson lab) {
@@ -20,6 +21,14 @@ public class CourseIndex extends Course {
 		//this.tutorial = tut;
 		//this.lab = lab;
 	}
+	
+	public CourseIndex(String courseCode, int index) {//, Lesson tut, Lesson lab) {
+		super(courseCode);
+		this.index = index;
+	}
+	
+	
+	
 	public int getIndex() {
 		return index;
 	}
@@ -45,6 +54,24 @@ public class CourseIndex extends Course {
 		vacancy++;
 	}
 	
+	public static List getCoursedList() {
+		return getCoursedList("courselist.dat");
+	}
+
+	public static List getCoursedList(String filename) {
+		List list = null;
+		try {
+			list = FileIO.readInFile(filename);
+		} catch (Exception e) {
+		}
+		if (list == null)
+			list = new ArrayList();
+		return list;
+	}
+
+	public static void save(List list) {
+		FileIO.writeToFile("courselist.dat", list);
+	}
 
 	/*public String getCourseCode() {
 		return courseCode;
