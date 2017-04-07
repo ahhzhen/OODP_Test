@@ -1,5 +1,8 @@
 import java.util.*;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Admin extends User {
 	Admin(String u) {
@@ -18,25 +21,30 @@ public class Admin extends User {
 				choice = in;
 				switch (choice) {
 				case 1:
-					adminc.editStudentAccessPeriod();
+					//adminc.editStudentAccessPeriod();
+					System.out.print("Enter matriculation number of student: ");
+					String mNo = input.next();
+					Student stud = Student.getStudentByMatric(mNo);
+					if(stud != null)
+						editStudentAccessPeriod(stud);
 					break;
 				case 2:
-					adminc.addStudent();
+					//adminc.addStudent();
 					break;
 				case 3:
-					adminc.modifyCourse();
+					//adminc.modifyCourse();
 					break;
 				case 4:
-					adminc.checkVacancies();
+					//adminc.checkVacancies();
 					break;
 				case 5:
-					adminc.printStudentListByIndex();
+					//adminc.printStudentListByIndex();
 					break;
 				case 6:
-					adminc.printStudentListByCourse();
+					//adminc.printStudentListByCourse();
 					break;
 				case 7:
-					adminc.quit();
+					//adminc.quit();
 					break;
 				default:
 					System.out.println("Wrong input detected, please try again!");
@@ -57,3 +65,38 @@ public class Admin extends User {
 		System.out.println("6. Print Student List By Course");
 		System.out.println("7. Quit");
 	}
+	
+	public void editStudentAccessPeriod(Student stud)
+	{
+		Scanner input = new Scanner(System.in);
+		System.out.println("Acess period of " + stud.getMatricNo() + ":");
+		System.out.println(stud.printStartDate() + " - " + stud.printEndDate());
+		System.out.print("Enter new access period date for student(DD/MM/YYYY): ");
+		String date = input.next();
+		System.out.println("Enter start time of the access period(HH:MM): ");
+		String time = input.next();
+		String newDateGiven = date + " " + time;
+		DateFormat d = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		try {
+			Date newDate = d.parse(newDateGiven);
+			stud.setStartDate(newDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void addStudent()
+	{
+		String userid, matricNo, name, nationality;
+		Scanner input = new Scanner(System.in);
+		System.out.println("--------Add Student--------");
+		System.out.print("Enter user id for student: ");
+		userid = input.next();
+		System.out.print("Enter matriculation number for student: ");
+		matricNo = input.next();
+		System.out.print("Enter name for student: ");
+		name = input.next();
+		
+	}
+}

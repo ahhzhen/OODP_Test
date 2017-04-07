@@ -5,6 +5,8 @@ public abstract class User {
 	private String password;
 	private String type;
 	
+	User(){}
+	
 	User(String u, String p, String t)
 	{
 		username = u;
@@ -42,5 +44,6 @@ public abstract class User {
 	}
 	
 	abstract void startSession();
+
 	
 }

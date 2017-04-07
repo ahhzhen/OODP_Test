@@ -12,7 +12,7 @@ public class FileIO {
 			in = new ObjectInputStream(fis);
 			fileDetails = (ArrayList<?>) in.readObject();
 			in.close();
-		}catch(IOException ex){}
+		}catch(IOException ex){ex.printStackTrace();}
 		catch(ClassNotFoundException ex){}
 		return fileDetails;
 	}

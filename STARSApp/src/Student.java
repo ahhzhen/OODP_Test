@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.text.*;
 
 public class Student extends User implements Serializable {
 	private String matricNo;
@@ -18,6 +19,8 @@ public class Student extends User implements Serializable {
     FileReader fr = null;
     BufferedReader br = null;
     
+    Student(){super();}
+    
 	Student(String username, String password, String matricNo, String name, char gender, String nationality)
 	{
 		super(username,password,"Student");
@@ -25,6 +28,47 @@ public class Student extends User implements Serializable {
 		this.name = name;
 		this.gender = gender;
 		this.nationality = nationality;
+		setInitialDate(); 
+	}
+	
+	private void updateStudentToFile()
+	{
+		List list = getStudentList();
+		for(int i = 0; i < list.size(); i++)
+		{
+			Student stud = (Student) list.get(i);
+			if(stud.getMatricNo().equals(matricNo)){
+				list.remove(i);
+				list.add(this);
+			}
+		}
+		save(list);
+	}
+	
+	public void setInitialDate()
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MONTH, 3);
+        cal.set(Calendar.DATE, 6);
+        cal.set(Calendar.YEAR, 2017);
+        cal.set(Calendar.HOUR_OF_DAY, 17);
+        cal.set(Calendar.MINUTE,30);
+        cal.set(Calendar.SECOND,00);
+        //cal.set(Calendar.AM_PM, 1);
+        this.start = cal.getTime();
+        
+        cal.add(Calendar.HOUR_OF_DAY, 1);
+        this.end = cal.getTime();
+	}
+	
+	public void setStartDate(Date newDate)
+	{
+		this.start = newDate;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(newDate);
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		this.end = cal.getTime();
+		updateStudentToFile();
 	}
 	
 	public String getMatricNo(){return matricNo;}
@@ -38,6 +82,18 @@ public class Student extends User implements Serializable {
 	public Date getStartDate(){return start;}
 	
 	public Date getEndDate(){return end;}
+	
+	public String printStartDate()
+	{
+		SimpleDateFormat ft = new SimpleDateFormat("E dd/MM/yyyy HH:mm:ss");
+		return ft.format(getStartDate());
+	}
+	
+	public String printEndDate()
+	{
+		SimpleDateFormat ft = new SimpleDateFormat("E dd/MM/yyyy HH:mm:ss");
+		return ft.format(getEndDate());
+	}
 	
 	public void startSession()
 	{
@@ -95,10 +151,6 @@ public class Student extends User implements Serializable {
 		System.out.println("6. Swop index number with another student");
 		System.out.println("7. Quit");
 	}
-
-	public void addCourse() {
-		StudentCourse.registerStudent(matricNo);
-	}
 	
 	public static Student getStudentByUsername(String username)
 	{
@@ -133,6 +185,12 @@ public class Student extends User implements Serializable {
 			return true;
 		return false;
 	}*/
+	
+	
+
+	public void addCourse() {
+		StudentCourse.registerStudent(matricNo);
+	}
 	
 	public void dropCourse() {
 		StudentCourse.unregisterStudent(matricNo);
