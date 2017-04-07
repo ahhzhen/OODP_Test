@@ -48,7 +48,7 @@ public class STARSApp
 			choice = -1;
 		}
 		userSession = createUser(user, type);
-		userSession.startSession();
+		userSession.startSession(); 
 	}
 
 	public static boolean checkLogin(ArrayList<String> uList, String user,

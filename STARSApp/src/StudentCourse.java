@@ -48,7 +48,11 @@ public class StudentCourse implements Serializable {
 	// other operations
 
 	public static boolean courseExist(String courseCode) {
-		return true;
+		return Course.courseExist(courseCode);
+	}
+	
+	public static Course getCourse(String courseCode) {
+		return Course.getCourse(courseCode);
 	}
 
 	public static boolean enrolled(String matricNo, String courseCode) {
@@ -80,18 +84,24 @@ public class StudentCourse implements Serializable {
 			String courseCode = input.nextLine();
 			if (courseExist(courseCode))// check if course Exist
 			{
-				if (!enrolled(matricNo, courseCode)) {
+				if (!enrolled(matricNo, courseCode)) 
+				{
 					System.out.print("Enter the course index: ");
 					int courseIndex = input.nextInt();
-					// check if index exist
-					List list = getRegisteredList();
-					try {
-						StudentCourse sc = new StudentCourse(matricNo, courseCode, courseIndex);
-						list.add(sc);
-						save(list);
-						System.out.println("Course registered successfully!");
-					} catch (Exception e) {
-						System.out.println("Error occured. Course not registered.");
+					Course course = getCourse(courseCode);
+					if(course.indexExist(courseIndex))// check if index exist
+					{	
+						List studentRegisteredList = getCoursesRegistered(matricNo);
+						//checkForClash
+						List list = getRegisteredList();
+						try {
+							StudentCourse sc = new StudentCourse(matricNo, courseCode, courseIndex);
+							list.add(sc);
+							save(list);
+							System.out.println("Course registered successfully!");
+						} catch (Exception e) {
+							System.out.println("Error occured. Course not registered.");
+						}
 					}
 				} else
 					System.out.println("Course has been registered previously.");
@@ -179,12 +189,18 @@ public class StudentCourse implements Serializable {
 		newIndex = scanInput.nextInt();
 
 		// check if course and courseIndex exists
-		for (int i = 0; i < list.size(); i++) {
-			StudentCourse studC = (StudentCourse) list.get(i);
-			if (studC.getCourseCode().equals(courseCode) && studC.getCourseIndex() == oldIndex) {
-				updateCourseIndex(courseCode, oldIndex, newIndex);
-				System.out.println("Index for course " + courseCode + " has been changed from " + oldIndex + " to "
-						+ newIndex + " .");
+		if(courseExist(courseCode))
+		{
+			Course c = getCourse(courseCode);
+			if(c.indexExist(oldIndex) && c.indexExist(newIndex)){
+				for (int i = 0; i < list.size(); i++) {
+					StudentCourse studC = (StudentCourse) list.get(i);
+					if (studC.getCourseCode().equals(courseCode) && studC.getCourseIndex() == oldIndex) {
+						updateCourseIndex(courseCode, oldIndex, newIndex);
+						System.out.println("Index for course " + courseCode + " has been changed from " + oldIndex + " to "
+								+ newIndex + " .");
+					}
+				}
 			}
 		}
 		save(list);

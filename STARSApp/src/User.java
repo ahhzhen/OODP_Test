@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Scanner;
 
-public abstract class User {
+public abstract class User implements Serializable {
 	private String username;
 	private String password;
 	private String type;

@@ -99,7 +99,7 @@ public class Student extends User implements Serializable {
 	{
 		int choice = -1;
 		Scanner input = new Scanner(System.in);
-		while(choice!= 0)
+		while(choice!= 7)
 		{
 			displayMenu();
 			System.out.println("Please select choice from menu: ");
@@ -131,9 +131,6 @@ public class Student extends User implements Serializable {
 				break;
 			case 7:
 				quit();
-				break;
-			case 0:
-				System.out.println("Program exiting....");
 				break;
 			default:System.out.println("Wrong input detected, please try again!");
 			}
@@ -186,7 +183,12 @@ public class Student extends User implements Serializable {
 		return false;
 	}*/
 	
-	
+	public void addNewStudentToFile()
+	{
+		List list = getStudentList();
+		list.add(this);
+		save(list);
+	}
 
 	public void addCourse() {
 		StudentCourse.registerStudent(matricNo);
