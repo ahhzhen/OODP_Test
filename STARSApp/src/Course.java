@@ -1,6 +1,6 @@
 import java.util.*;
-
-public class Course {
+import java.io.*;
+public class Course implements Serializable {
 	private String name;
 	private String courseCode;
 	private String school;
@@ -8,6 +8,7 @@ public class Course {
 	private ArrayList<CourseIndex> cIndexList;
 	// private static ArrayList<Course> courseList; //StudentCourse will hold
 	// the courseList
+	private TimeSlot lecture;
 
 	public Course() {
 	}
@@ -20,6 +21,7 @@ public class Course {
 		this.name = name;
 		this.courseCode = courseCode;
 		this.school = school;
+		this.cIndexList = new ArrayList<CourseIndex>();
 	}
 
 	public String getName() {
@@ -96,8 +98,8 @@ public class Course {
 		}
 	}
 
-	public void AddtocIndexList(int index, int vacancy, String gname) {
-		this.cIndexList.add(new CourseIndex(index, vacancy, gname));
+	public void AddtocIndexList(int index, int vacancy, String gname, TimeSlot t, TimeSlot l) {
+		this.cIndexList.add(new CourseIndex(index, vacancy, gname, t,l));
 	}
 
 	public boolean selectIndex(int index) {
@@ -221,5 +223,44 @@ public class Course {
 		}
 		return false;
 
+	}
+	
+	public List getTimeSlots(int courseIndex)
+	{
+		List<TimeSlot> list = new ArrayList();
+		list.add(lecture);
+		for(int i = 0; i < cIndexList.size(); i++)
+		{
+			CourseIndex cIndex = cIndexList.get(i);
+			if(cIndex.getIndex() == courseIndex)
+			{
+				list.add(cIndex.getLab());
+				list.add(cIndex.getTutorial());
+			}
+		}
+		return list;
+	}
+	
+	public boolean checkClash(List<TimeSlot> tsList, int courseIndex)
+	{
+		for(int i = 0; i < cIndexList.size(); i++)
+		{
+			CourseIndex cIndex = cIndexList.get(i);
+			if(courseIndex == cIndex.getIndex())
+			{
+				return cIndex.checkClash(tsList) || lecture.hasClash(tsList);
+			}
+		}
+		return false;
+	}
+	
+	public void printStudents()
+	{
+		StudentCourse.printStudents(courseCode);
+	}
+	
+	public void printStudents(int courseIndex)
+	{
+		StudentCourse.printStudents(courseIndex);
 	}
 }

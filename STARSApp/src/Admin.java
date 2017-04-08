@@ -30,13 +30,13 @@ public class Admin extends User {
 					modifyCourse();
 					break;
 				case 4:
-					//adminc.checkVacancies();
+					adminc.checkVacancies();
 					break;
 				case 5:
 					printStudentListByIndex();
 					break;
 				case 6:
-					//adminc.printStudentListByCourse();
+					adminc.printStudentListByCourse();
 					break;
 				case 7:
 					quit();
@@ -82,7 +82,6 @@ public class Admin extends User {
 				Date newDate = d.parse(newDateGiven);
 				stud.setStartDate(newDate);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

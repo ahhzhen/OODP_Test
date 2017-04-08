@@ -1,33 +1,31 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CourseIndex extends Course {
+public class CourseIndex implements Serializable {
 	private int index;
 	private int vacancy;
 	private String groupName;
-	//private Lesson tutorial;
-	//private Lesson lab;
+	private TimeSlot tutorial;
+	private TimeSlot lab;
+	private ArrayList<String> waitList;
 	
-	//private String name;
-	//private String courseCode;
-	//private String school;
-	private ArrayList<CourseIndex> cIndexList;
-	//private ArrayList<CourseIndex> coursesList;
+	CourseIndex() {}
 	
-	public CourseIndex(int index, int vacancy, String gname) {//, Lesson tut, Lesson lab) {
+	CourseIndex(int index, int vacancy, String gname) {
 		this.index = index;
 		this.vacancy = vacancy;
 		this.groupName = gname;
-		//this.tutorial = tut;
-		//this.lab = lab;
 	}
 	
-	public CourseIndex(String courseCode, int index) {//, Lesson tut, Lesson lab) {
-		super(courseCode);
+	CourseIndex(int index, int vacancy, String gname, TimeSlot tut, TimeSlot lab) {//, Lesson tut, Lesson lab) {
 		this.index = index;
+		this.vacancy = vacancy;
+		this.groupName = gname;
+		this.tutorial = tut;
+		this.lab = lab;
+		this.waitList = new ArrayList<String>();
 	}
-	
-	
 	
 	public int getIndex() {
 		return index;
@@ -51,41 +49,32 @@ public class CourseIndex extends Course {
 	}
 	
 	public void incrementVacancy() {
-		vacancy++;
+		if(waitList.size() > 0)
+		{
+			//grab first entry and notify
+			waitList.remove(0);
+		}
+		else
+			vacancy++;
+		
 	}
 	
-	public static List getCoursedList() {
-		return getCoursedList("courselist.dat");
+	public TimeSlot getLab()
+	{
+		return lab;
 	}
-
-	public static List getCoursedList(String filename) {
-		List list = null;
-		try {
-			list = FileIO.readInFile(filename);
-		} catch (Exception e) {
-		}
-		if (list == null)
-			list = new ArrayList();
-		return list;
+	
+	public TimeSlot getTutorial()
+	{
+		return tutorial;
 	}
-
-	public static void save(List list) {
-		FileIO.writeToFile("courselist.dat", list);
-	}
-
-	/*public String getCourseCode() {
-		return courseCode;
-	}*/
 
 	public boolean indexExist(int index) {
-		/*if (cIndexList != null) {
-			for (int i = 0; i < cIndexList.size(); i++) {
-				CourseIndex cIndex = cIndexList.get(i);
-				if (cIndex.getIndex() == index) {
-					return true;
-				}
-			}
-		}*/
 		return (index == this.index);
+	}
+	
+	public boolean checkClash(List<TimeSlot> timeSlotList)
+	{
+		return (lab.hasClash(timeSlotList) || tutorial.hasClash(timeSlotList));
 	}
 }

@@ -91,16 +91,24 @@ public class StudentCourse implements Serializable {
 					Course course = getCourse(courseCode);
 					if(course.indexExist(courseIndex))// check if index exist
 					{	
-						List studentRegisteredList = getCoursesRegistered(matricNo);
-						//checkForClash
-						List list = getRegisteredList();
-						try {
-							StudentCourse sc = new StudentCourse(matricNo, courseCode, courseIndex);
-							list.add(sc);
-							save(list);
-							System.out.println("Course registered successfully!");
-						} catch (Exception e) {
-							System.out.println("Error occured. Course not registered.");
+						//check for vacancies
+						if(course.retrieveVacancy(courseIndex) > 0)
+						{
+							//checkForClash
+							List studentRegisteredList = getCoursesRegistered(matricNo);
+							List<TimeSlot> tsList = getTimeSlots(studentRegisteredList);
+							if(!course.checkClash(tsList, courseIndex))
+							{
+								List list = getRegisteredList();
+								try {
+									StudentCourse sc = new StudentCourse(matricNo, courseCode, courseIndex);
+									list.add(sc);
+									save(list);
+									System.out.println("Course registered successfully!");
+								} catch (Exception e) {
+									System.out.println("Error occured. Course not registered.");
+								}
+							}
 						}
 					}
 				} else
@@ -174,41 +182,77 @@ public class StudentCourse implements Serializable {
 		}
 	}
 
+	public static void checkVacancy()
+	{
+		String courseCode;
+		int courseIndex;
+		Scanner input = new Scanner(System.in);
+		System.out.print("Enter course code: ");
+		courseCode = input.nextLine();
+		System.out.print("Enter course index: ");
+		courseIndex = input.nextInt();
+		
+		if(Course.courseExist(courseCode))
+		{
+			Course c = Course.getCourse(courseCode);
+			if(c.indexExist(courseIndex))
+				System.out.println("Vacancy for index " + courseIndex + ": " + c.retrieveVacancy(courseIndex));
+		}
+	}
+	
 	public static void changeCourseIndex(String matricNumber) {
-		List list = getCoursesRegistered(matricNumber);
+		List registeredCourselist = getCoursesRegistered(matricNumber);
 
 		String courseCode;
 		int newIndex, oldIndex;
 		Scanner scanInput = new Scanner(System.in);
 
-		System.out.println("Enter course code:");
+		System.out.print("Enter course code:");
 		courseCode = scanInput.nextLine();
-		System.out.println("Enter old course index:");
+		System.out.print("Enter old course index:");
 		oldIndex = scanInput.nextInt();
-		System.out.println("Enter new course index:");
+		System.out.print("Enter new course index:");
 		newIndex = scanInput.nextInt();
 
 		// check if course and courseIndex exists
 		if(courseExist(courseCode))
 		{
 			Course c = getCourse(courseCode);
-			if(c.indexExist(oldIndex) && c.indexExist(newIndex)){
-				for (int i = 0; i < list.size(); i++) {
-					StudentCourse studC = (StudentCourse) list.get(i);
-					if (studC.getCourseCode().equals(courseCode) && studC.getCourseIndex() == oldIndex) {
-						updateCourseIndex(courseCode, oldIndex, newIndex);
-						System.out.println("Index for course " + courseCode + " has been changed from " + oldIndex + " to "
-								+ newIndex + " .");
+			if(c.indexExist(oldIndex) && c.indexExist(newIndex)){ 
+				List tsList = getTimeSlots(registeredCourselist, oldIndex);
+				if(!c.checkClash(tsList, newIndex))//check if new index clashes with registered courses
+				{
+					//check vacancy for newIndex
+					if(c.retrieveVacancy(newIndex)>0)
+					{
+						List list = getRegisteredList();
+						for (int i = 0; i < list.size(); i++) {
+							StudentCourse studC = (StudentCourse) registeredCourselist.get(i);
+							if (studC.getCourseCode().equals(courseCode) && studC.getCourseIndex() == oldIndex 
+									&& studC.getMatricNumber().equals(matricNumber)) {
+								studC.setCourseIndex(newIndex);
+								c.addToIndex(oldIndex); //increase vacancy for old index
+								c.minusFromIndex(newIndex); //decrease vacancy for new index
+								System.out.println("Index for course " + courseCode + " has been changed from " + oldIndex + " to "
+										+ newIndex + " .");
+							}
+						save(list);
+						}
 					}
+					else
+						System.out.println("There are no vacancies for index " + newIndex);
 				}
+				else
+					System.out.println("The new index have clashes with your current registered courses!");
 			}
+			else
+			System.out.println("Error in course index!");
 		}
-		save(list);
-		// else
+		else
 		System.out.println("Course code/course index does not exist.");
 	}
 
-	public static void updateCourseIndex(String courseCode, int oldIndex, int newIndex) {
+	public static void adminUpdateCourseIndex(String courseCode, int oldIndex, int newIndex) {
 		List list = getRegisteredList();
 		int found = 0;
 
@@ -243,29 +287,108 @@ public class StudentCourse implements Serializable {
 			swopIndex = scanInput.nextInt();
 			if (enrolled(studBMatric, courseCode, swopIndex))// check if studentB have registered for the swop index
 			{
-				Student studB = Student.getStudentByMatric(studBMatric);// getStudentObject
-				if (studB.getPassword().equals(Integer.toString(password.hashCode()))) {// check if password matches
-					List<StudentCourse> list = getRegisteredList();// get registered list
-					for (int i = 0; i < list.size(); i++) {
-						StudentCourse studC = (StudentCourse) list.get(i);
-						if (studC.getMatricNumber().equals(matricNumber) && studC.getCourseCode().equals(courseCode)
-								&& studC.getCourseIndex() == oldIndex)
-							studC.setCourseIndex(swopIndex);
-						if (studC.getMatricNumber().equals(studBMatric) && studC.getCourseCode().equals(courseCode)
-								&& studC.getCourseIndex() == swopIndex)
-							studC.setCourseIndex(oldIndex);
+				//check for clash
+				List studAList = getTimeSlots(getCoursesRegistered(matricNumber), oldIndex);
+				List studBList = getTimeSlots(getCoursesRegistered(matricNumber), swopIndex);
+				Course c = Course.getCourse(courseCode);
+				if(!c.checkClash(studAList, swopIndex) && !c.checkClash(studBList, oldIndex))
+				{
+					Student studB = Student.getStudentByMatric(studBMatric);// getStudentObject
+					if (studB.getPassword().equals(Integer.toString(password.hashCode()))) {// check if password matches
+						List<StudentCourse> list = getRegisteredList();// get registered list
+						for (int i = 0; i < list.size(); i++) {
+							StudentCourse studC = (StudentCourse) list.get(i);
+							if (studC.getMatricNumber().equals(matricNumber) && studC.getCourseCode().equals(courseCode)
+									&& studC.getCourseIndex() == oldIndex)
+								studC.setCourseIndex(swopIndex);
+							if (studC.getMatricNumber().equals(studBMatric) && studC.getCourseCode().equals(courseCode)
+									&& studC.getCourseIndex() == swopIndex)
+								studC.setCourseIndex(oldIndex);
+						}
+						save(list);
+						System.out.println("Indexes have been swapped successfully!");
 					}
-					save(list);
-					System.out.println("Indexes have been swapped successfully!");
 				}
 			}
 		}
+	}
+	
+	public static void printStudents(int courseIndex)
+	{
+		int found = 0;
+		List list = getRegisteredList();
+		for(int i = 0; i < list.size(); i++)
+		{
+			StudentCourse sc = (StudentCourse)list.get(i);
+			if(sc.getCourseCode().equals(Integer.toString(courseIndex)))
+			{
+				found++;
+				if(found ==1)
+					System.out.println("Name\tGender\tNationality");
+				Student stud = Student.getStudentByMatric(sc.getMatricNumber());
+				System.out.println(stud.getName() + "\t" + stud.getGender() + "\t" + stud.getNationality());
+			}
+		}
+		if (found == 0)
+			System.out.println("No student have registered for the course");
+	}
+
+	public static void printStudents(String courseCode)
+	{
+		int found = 0;
+		List list = getRegisteredList();
+		for(int i = 0; i < list.size(); i++)
+		{
+			StudentCourse sc = (StudentCourse)list.get(i);
+			if(sc.getCourseCode().equals(courseCode))
+			{
+				found++;
+				if(found ==1)
+					System.out.println("Name\tGender\tNationality");
+				Student stud = Student.getStudentByMatric(sc.getMatricNumber());
+				System.out.println(stud.getName() + "\t" + stud.getGender() + "\t" + stud.getNationality());
+			}
+		}
+		if (found == 0)
+			System.out.println("No student have registered for the course");
+	}
+	
+	public static List getTimeSlots(List<StudentCourse> studentList)
+	{
+		List<TimeSlot> consolidatedList = new ArrayList();
+		for(int i = 0; i < studentList.size(); i++)
+		{
+			StudentCourse sc = studentList.get(i);
+			Course c = Course.getCourse(sc.getCourseCode());
+			int courseIndex = (sc.getCourseIndex());
+			List timeList = c.getTimeSlots(courseIndex);
+			for(int j = 0; j<timeList.size();j++)
+			{
+				consolidatedList.add((TimeSlot)timeList.get(i));
+			}
+		}
+		return consolidatedList;
+	}
+	
+	public static List getTimeSlots(List<StudentCourse> studentList, int index)
+	{
+		List<TimeSlot> consolidatedList = new ArrayList();
+		for(int i = 0; i < studentList.size(); i++)
+		{
+			StudentCourse sc = studentList.get(i);
+			if(sc.getCourseIndex()==index)
+			{
+				studentList.remove(sc);
+				return getTimeSlots(studentList);
+			}
+		}
+		return consolidatedList;
 	}
 
 	public static List getRegisteredList() {
 		return getRegisteredList("testfile.dat");
 	}
-
+	
 	public static List getRegisteredList(String filename) {
 		List list = null;
 		try {

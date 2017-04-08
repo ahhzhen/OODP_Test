@@ -6,7 +6,7 @@ public class Daytimeclash {
 	public static void main(String[] args) {
 		List<TimeSlot> test = new ArrayList<TimeSlot>();
 		// TODO Auto-generated method stub
-		test.add(new TimeSlot(DayOfWeek.MONDAY,LocalTime.parse("13:30"),LocalTime.parse("15:30")));
+		//test.add(new TimeSlot(DayOfWeek.MONDAY,LocalTime.parse("13:30"),LocalTime.parse("15:30")));
 		Scanner sc = new Scanner(System.in);
 		//menu
 		System.out.println("Please enter day: ");
@@ -28,7 +28,7 @@ public class Daytimeclash {
 		}
 		else
 		{
-			test.add(new TimeSlot(dow,start,end));
+			//test.add(new TimeSlot(dow,start,end));
 			System.out.println("Test completed.");
 			for(int i = 0; i < test.size();i++)
 			{

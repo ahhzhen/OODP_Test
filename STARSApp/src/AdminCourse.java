@@ -35,18 +35,47 @@ public class AdminCourse {
 	}
 
 	public void checkVacancies() {
-
+		Scanner input = new Scanner(System.in);
+		System.out.print("Enter course code: ");
+		String cCode = input.next();
+		System.out.print("Enter course index: ");
+		int cIndex = input.nextInt();
+		if(Course.courseExist(cCode))
+		{
+			Course c = Course.getCourse(cCode);
+			if(c.indexExist(cIndex))
+				System.out.println("Vacancy for " + cIndex + " = " + c.retrieveVacancy(cIndex));
+		}
 	}
 
 	public void printStudentListByIndex() {
-
+		Scanner input = new Scanner(System.in);
+		System.out.print("Enter course code: ");
+		String cCode = input.next();
+		System.out.print("Enter course index: ");
+		int cIndex = input.nextInt();
+		if(Course.courseExist(cCode))
+		{
+			Course c = Course.getCourse(cCode);
+			if(c.indexExist(cIndex))
+			{
+				c.printStudents(cIndex);
+			}
+		}
 	}
 
 	public void printStudentListByCourse() {
-
+			Scanner input = new Scanner(System.in);
+			System.out.print("Enter course code: ");
+			String course = input.next();
+			if(Course.courseExist(course))
+			{
+				Course c = Course.getCourse(course);
+				c.printStudents();
+			}
 	}
 
-	public static List getCoursedList() {
+	public static List getCourseList() {
 		return getCoursedList("courselist.dat");
 	}
 
@@ -66,8 +95,8 @@ public class AdminCourse {
 	}
 
 	public boolean courseExist(String coursecode) {
-		Course course = new Course();
-		if (course.courseExist(coursecode)) {
+		//Course course = new Course();
+		if (Course.courseExist(coursecode)) {
 			return true;
 		} else {
 			return false;
@@ -98,7 +127,7 @@ public class AdminCourse {
 		String coursecode = sc.nextLine();
 		if (courseExist(coursecode)) {
 
-			List list = getCoursedList();
+			List list = getCourseList();
 			// List<AdminCourse> courseList = new ArrayList<AdminCourse>();
 
 			try {
@@ -133,6 +162,8 @@ public class AdminCourse {
 								}
 
 								break;
+							case 3:
+								break;
 							default:
 								System.out.println("Invalid Input");
 
@@ -156,7 +187,7 @@ public class AdminCourse {
 		System.out.println("Enter Course Code: ");
 		String coursecode = sc.nextLine();
 		if (courseExist(coursecode)) {
-			List list = getCoursedList();
+			List list = getCourseList();
 			System.out.println("Enter Index");
 			try {
 				int indexinput=sc.nextInt();

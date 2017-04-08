@@ -16,12 +16,7 @@ public class STARSApp
 		uList.add("123456;" + str.hashCode() + ";Admin");
 		uList.add("aaa074;" + "123456".hashCode() + ";Student");
 		uList.add("bbb123;" + "654321".hashCode() + ";Student");
-		List studList = new ArrayList();
-		Student StudentA = new Student("aaa074", Integer.toString("123456".hashCode()), "U1620736G", "Student1", 'F', "Singaporean");
-		Student StudentB = new Student("bbb123", Integer.toString("654321".hashCode()), "U1622603D", "Student2", 'F', "Singaporean");
-		studList.add(StudentA);
-		studList.add(StudentB);
-		FileIO.writeToFile("studentList.dat", studList);
+		InitFiles.init();
 		System.out.println("Welcome~\nPlease Login");
 		while (login == false) {
 			while (choice != 1 && choice != 2) {
