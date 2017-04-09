@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.Console;
 import java.util.regex.Pattern;
-
+import java.time.*;
 public class STARSApp 
 {
 
@@ -16,7 +16,14 @@ public class STARSApp
 		uList.add("123456;" + str.hashCode() + ";Admin");
 		uList.add("aaa074;" + "123456".hashCode() + ";Student");
 		uList.add("bbb123;" + "654321".hashCode() + ";Student");
-		InitFiles.init();
+		uList.add("ccc123;" + "123456".hashCode() + ";Student");
+		uList.add("ddd123;" + "654321".hashCode() + ";Student");
+		uList.add("eee123;" + "123456".hashCode() + ";Student");
+		uList.add("fff123;" + "654321".hashCode() + ";Student");
+		uList.add("ggg123;" + "123456".hashCode() + ";Student");
+		uList.add("hhh123;" + "654321".hashCode() + ";Student");
+		uList.add("iii123;" + "123456".hashCode() + ";Student");
+		//InitFiles.init();
 		System.out.println("Welcome~\nPlease Login");
 		while (login == false) {
 			while (choice != 1 && choice != 2) {
@@ -43,7 +50,10 @@ public class STARSApp
 			choice = -1;
 		}
 		userSession = createUser(user, type);
-		userSession.startSession(); 
+		if(userSession!= null){
+			System.out.println("Login Successfully!");
+			userSession.startSession();
+		}
 	}
 
 	public static boolean checkLogin(ArrayList<String> uList, String user,
@@ -53,7 +63,6 @@ public class STARSApp
 			if (s[0].equals(user)) {
 				if (s[1].equals(Integer.toString(pw.hashCode()))) {
 					if (s[2].equals(type)) {
-						System.out.println("Login Successfully!");
 						return true;
 					}
 				}
@@ -64,9 +73,21 @@ public class STARSApp
 	}
 
 	public static User createUser(String username, String type) {
-		User u;
+		User u = null;
 		if (type.equals("Student"))
-			u = new Student(username, Integer.toString("123456".hashCode()) , "U1620736G", "Student1", 'F', "Singaporean");
+		{
+			Student s;
+			List studList = Student.getStudentList();
+			for(int i=0; i<studList.size();i++)
+			{
+				s = (Student)studList.get(i);
+				if(s.getUsername().equals(username))
+				{
+					if(s.checkAccessPeriod())
+						u = s;
+				}
+			}
+		}
 		else
 			u = new Admin(username);
 		return u;

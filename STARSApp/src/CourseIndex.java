@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseIndex implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int index;
 	private int vacancy;
 	private String groupName;
@@ -42,6 +43,16 @@ public class CourseIndex implements Serializable {
 	public void setVacancy(int vacancy) {
 		this.vacancy = vacancy;
 	}
+	
+	public String getGroupName()
+	{
+		return groupName;
+	}
+	
+	public void setGroupName(String gName)
+	{
+		this.groupName = gName;
+	}
 
 	public void decrementVacancy() {
 		if (vacancy > 0)
@@ -49,14 +60,7 @@ public class CourseIndex implements Serializable {
 	}
 	
 	public void incrementVacancy() {
-		if(waitList.size() > 0)
-		{
-			//grab first entry and notify
-			waitList.remove(0);
-		}
-		else
 			vacancy++;
-		
 	}
 	
 	public TimeSlot getLab()
@@ -75,6 +79,27 @@ public class CourseIndex implements Serializable {
 	
 	public boolean checkClash(List<TimeSlot> timeSlotList)
 	{
-		return (lab.hasClash(timeSlotList) || tutorial.hasClash(timeSlotList));
+		boolean l = false,t = false;
+		if(lab != null)
+			l = lab.hasClash(timeSlotList);
+		if(tutorial != null)
+			t = tutorial.hasClash(timeSlotList);
+		return (l || t);
+	}
+
+	public void addWaitList(String matricNo) {
+		waitList.add(matricNo);
+	}
+	
+	public int getWaitListSize()
+	{
+		return waitList.size();
+	}
+	
+	public String getWaitListStudent()
+	{
+		String stud = waitList.get(0);
+		waitList.remove(0);
+		return stud;
 	}
 }

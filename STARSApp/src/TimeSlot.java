@@ -46,7 +46,7 @@ public class TimeSlot implements Serializable {
 		{
 			if(list.get(i).getDay() == day)
 			{
-				System.out.println("Checking...");
+				//System.out.println("Checking...");
 				if (start.isAfter(list.get(i).getStart()) && start.isBefore(list.get(i).getEnd())) //start is within an occupied slot
 				{
 					System.out.println("Start clashed.");

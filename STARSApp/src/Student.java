@@ -49,10 +49,10 @@ public class Student extends User implements Serializable {
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, 3);
-        cal.set(Calendar.DATE, 6);
+        cal.set(Calendar.DATE, 10);
         cal.set(Calendar.YEAR, 2017);
-        cal.set(Calendar.HOUR_OF_DAY, 17);
-        cal.set(Calendar.MINUTE,30);
+        cal.set(Calendar.HOUR_OF_DAY, 2);
+        cal.set(Calendar.MINUTE,50);
         cal.set(Calendar.SECOND,00);
         //cal.set(Calendar.AM_PM, 1);
         this.start = cal.getTime();
@@ -102,7 +102,7 @@ public class Student extends User implements Serializable {
 		while(choice!= 7)
 		{
 			displayMenu();
-			System.out.println("Please select choice from menu: ");
+			System.out.print("Please select choice from menu: ");
 			try{
 				choice = input.nextInt();
 			}
@@ -175,6 +175,17 @@ public class Student extends User implements Serializable {
 		return s;
 	}
 	
+	public boolean checkAccessPeriod()
+	{
+		Date currentTime = new Date();
+		if(currentTime.after(start) && currentTime.before(end))
+			return true;
+		else{ 
+			System.out.println("You are not allowed to register for course now!");
+			return false;
+		}
+	}
+	
 /*	public static boolean checkPassword(String password)
 	{
 		PasswordHash pHash = new PasswordHash();
@@ -215,9 +226,9 @@ public class Student extends User implements Serializable {
 		}
 	}
 
-	public int checkVacanciesAvailable() {
+	public void checkVacanciesAvailable() {
 
-		return -1;
+		StudentCourse.checkVacancy();
 	}
 	
 	public void changeIndexNumber() {

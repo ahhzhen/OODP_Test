@@ -2,33 +2,6 @@ import java.util.*;
 import java.util.zip.InflaterOutputStream;
 
 public class AdminCourse {
-	private String courseCode;
-	private String school;
-	private String coursename;
-
-	public String getCourseCode() {
-		return courseCode;
-	}
-
-	public void setCourseCode(String courseCode) {
-		this.courseCode = courseCode;
-	}
-
-	public String getSchool() {
-		return school;
-	}
-
-	public void setSchool(String school) {
-		this.school = school;
-	}
-
-	public String getCoursename() {
-		return coursename;
-	}
-
-	public void setCoursename(String coursename) {
-		this.coursename = coursename;
-	}
 
 	public AdminCourse() {
 
@@ -76,10 +49,10 @@ public class AdminCourse {
 	}
 
 	public static List getCourseList() {
-		return getCoursedList("courselist.dat");
+		return getCourseList("courselist.dat");
 	}
 
-	public static List getCoursedList(String filename) {
+	public static List getCourseList(String filename) {
 		List list = null;
 		try {
 			list = FileIO.readInFile(filename);
@@ -103,16 +76,16 @@ public class AdminCourse {
 		}
 	}
 
-
 	public void addCourse() {
 		Scanner sc = new Scanner(System.in);
+		TimeSlot lect;
 		Course course = new Course();
-		System.out.println("Enter Course Code: ");
+		System.out.print("Enter Course Code: ");
 		String coursecode = sc.nextLine();
 		if (!courseExist(coursecode)) {
-			System.out.println("Course Name: ");
+			System.out.print("Course Name: ");
 			String coursename = sc.nextLine();
-			System.out.println("School: ");
+			System.out.print("School: ");
 			String school = sc.nextLine();
 			course.addCourse(coursename, coursecode, school);
 		} else {
@@ -126,54 +99,55 @@ public class AdminCourse {
 		System.out.println("Enter Course Code: ");
 		String coursecode = sc.nextLine();
 		if (courseExist(coursecode)) {
-
-			List list = getCourseList();
-			// List<AdminCourse> courseList = new ArrayList<AdminCourse>();
-
 			try {
-				if (list.size() != 0) {
-					for (int i = 0; i < list.size(); i++) {
-						AdminCourse adminc = (AdminCourse) list.get(i);
-						if (adminc.getCourseCode().equals(coursecode)) {
-							System.out.println("1. Edit Course Name");
-							System.out.println("2. Edit School");
-							System.out.println("3. Edit Course Index");
-							int input = sc.nextInt();
-							switch (input) {
-							case 1:
-								System.out.println("Current Course Name is : " + adminc.getCoursename());
-								System.out.println("Enter new course name (Enter -1 to cancel) :");
-								String nameinput = sc.nextLine();
-								if (nameinput == "-1") {
-									break;
-								} else {
-									course.editCourseName(nameinput, courseCode);
-
-								}
-								break;
-							case 2:
-								System.out.println("Current School is : " + adminc.getCoursename());
-								System.out.println("Enter new School (Enter -1 to cancel) :");
-								String schoolinput = sc.nextLine();
-								if (schoolinput == "-1") {
-									break;
-								} else {
-									course.editSchool(courseCode, schoolinput);
-								}
-
-								break;
-							case 3:
-								break;
-							default:
-								System.out.println("Invalid Input");
-
-							}
-						}
+				Course c = Course.getCourse(coursecode);
+						
+				System.out.println("1. Edit Course Name");
+				System.out.println("2. Edit School");
+				System.out.println("3. Edit Course Index");
+				int input = sc.nextInt();
+				switch (input) {
+				case 1:
+					System.out.println("Current Course Name is : " + c.getName());
+					System.out.print("Enter new course name (Enter -1 to cancel) :");
+					String nameinput = sc.next();
+					if (nameinput == "-1") {
+						break;
+					} else {
+						c.editCourseName(nameinput, c.getCourseCode());
 
 					}
-				} else
-					System.out.println("No courses have been registered!");
-			} catch (Exception e) {
+					break;
+				case 2:
+					System.out.println("Current School is : " + c.getSchool());
+					System.out.print("Enter new School (Enter -1 to cancel) :");
+					String schoolinput = sc.next();
+					if (schoolinput == "-1") {
+						break;
+					} else {
+						c.editSchool(c.getCourseCode(), schoolinput);
+					}
+
+					break;
+				case 3:
+					c.printIndexes();
+					System.out.print("Enter Index to change: ");
+					int oldIndex = sc.nextInt();
+					System.out.print("Enter new index for " + oldIndex + " (Enter -1 to cancel) : ");
+					int newIndex = sc.nextInt();
+					if(newIndex != -1)
+					{
+						if(c.indexExist(oldIndex) && !c.indexExist(newIndex))
+						{
+							c.editIndex(oldIndex, newIndex);
+						}
+					}
+					break;
+				default:
+					System.out.println("Invalid Input");
+
+					}
+				} catch (Exception e) {
 			}
 		} else {
 			System.out.println("Course Code does not exist!");

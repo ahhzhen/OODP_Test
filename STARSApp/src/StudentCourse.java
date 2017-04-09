@@ -81,7 +81,7 @@ public class StudentCourse implements Serializable {
 
 			Scanner input = new Scanner(System.in);
 			System.out.print("Enter the course code: ");
-			String courseCode = input.nextLine();
+			String courseCode = input.next();
 			if (courseExist(courseCode))// check if course Exist
 			{
 				if (!enrolled(matricNo, courseCode)) 
@@ -99,15 +99,25 @@ public class StudentCourse implements Serializable {
 							List<TimeSlot> tsList = getTimeSlots(studentRegisteredList);
 							if(!course.checkClash(tsList, courseIndex))
 							{
-								List list = getRegisteredList();
-								try {
-									StudentCourse sc = new StudentCourse(matricNo, courseCode, courseIndex);
-									list.add(sc);
-									save(list);
+								if(addStudentCourseEntry(matricNo, courseCode, courseIndex))
+								{
+									Course c = Course.getCourse(courseCode);
+									c.minusFromIndex(courseIndex);
+									c.save();
 									System.out.println("Course registered successfully!");
-								} catch (Exception e) {
-									System.out.println("Error occured. Course not registered.");
 								}
+								else
+									System.out.println("Error occured. Course not registered.");
+							}
+						}
+						else
+						{
+							System.out.println("No available vacancies for index " + courseIndex);
+							System.out.println("Do you wish to be in the waitlist?  1 - Yes  2 - No ");
+							int choice = input.nextInt();
+							if(choice == 1)
+							{
+								course.addToWaitList(courseIndex, matricNo);
 							}
 						}
 					}
@@ -115,6 +125,35 @@ public class StudentCourse implements Serializable {
 					System.out.println("Course has been registered previously.");
 			}
 		}
+	}
+
+	public static boolean addStudentCourseEntry(String matricNo, String courseCode, int courseIndex){
+		List list = getRegisteredList();
+		try {
+			StudentCourse sc = new StudentCourse(matricNo, courseCode, courseIndex);
+			list.add(sc);
+			save(list);
+			return true;
+		}
+		catch(Exception e)
+		{return false;}
+	}
+	
+	public static void addFromWaitList(String matricNo, String courseCode, int courseIndex)
+	{
+		if(addStudentCourseEntry(matricNo, courseCode, courseIndex))
+		{
+			//email student
+			String studentId="ZCHEN035";
+			String mailTo = studentId +"@e.ntu.edu.sg";
+			String password="cz2002oodp";
+			String mailFrom = "oodp2002@gmail.com";
+			String mailSubject = "random p******";
+			String mailText = "You have been successfully registered to " + courseCode + " - " + courseIndex + ". You may login to STARS to see.";
+			EmailTest.send(mailFrom,password,mailTo,mailSubject,mailText);
+		}
+		else
+			System.out.println("Error occured, student not registered to course");
 	}
 
 	public static List getCoursesRegistered(String matricNumber) {
@@ -173,6 +212,9 @@ public class StudentCourse implements Serializable {
 						&& studC.getCourseIndex() == courseIndex) {
 					list.remove(studC);
 					save(list);
+					Course c = Course.getCourse(courseCode);
+					c.addToIndex(courseIndex);
+					c.save();
 					return true;
 				}
 			}
@@ -218,32 +260,37 @@ public class StudentCourse implements Serializable {
 		if(courseExist(courseCode))
 		{
 			Course c = getCourse(courseCode);
+			//check if registered for oldIndex
 			if(c.indexExist(oldIndex) && c.indexExist(newIndex)){ 
-				List tsList = getTimeSlots(registeredCourselist, oldIndex);
-				if(!c.checkClash(tsList, newIndex))//check if new index clashes with registered courses
-				{
-					//check vacancy for newIndex
-					if(c.retrieveVacancy(newIndex)>0)
+				if(enrolled(matricNumber, courseCode, oldIndex)){
+					List tsList = getTimeSlots(registeredCourselist, oldIndex);
+					if(!c.checkClash(tsList, newIndex))//check if new index clashes with registered courses
 					{
-						List list = getRegisteredList();
-						for (int i = 0; i < list.size(); i++) {
-							StudentCourse studC = (StudentCourse) registeredCourselist.get(i);
-							if (studC.getCourseCode().equals(courseCode) && studC.getCourseIndex() == oldIndex 
-									&& studC.getMatricNumber().equals(matricNumber)) {
-								studC.setCourseIndex(newIndex);
-								c.addToIndex(oldIndex); //increase vacancy for old index
-								c.minusFromIndex(newIndex); //decrease vacancy for new index
-								System.out.println("Index for course " + courseCode + " has been changed from " + oldIndex + " to "
-										+ newIndex + " .");
+						//check vacancy for newIndex
+						if(c.retrieveVacancy(newIndex)>0)
+						{
+							List list = getRegisteredList();
+							for (int i = 0; i < list.size(); i++) {
+								StudentCourse studC = (StudentCourse) list.get(i);
+								if (studC.getCourseCode().equals(courseCode) && studC.getCourseIndex() == oldIndex 
+										&& studC.getMatricNumber().equals(matricNumber)) {
+									studC.setCourseIndex(newIndex);
+									c.minusFromIndex(newIndex); //decrease vacancy for new index
+									c = c.addToIndex(oldIndex); //increase vacancy for old index
+									c.save();
+									System.out.println("Index for course " + courseCode + " has been changed from " + oldIndex + " to "
+											+ newIndex + " .");
+								}
+							save(list);
 							}
-						save(list);
 						}
+						else
+							System.out.println("There are no vacancies for index " + newIndex);
 					}
 					else
-						System.out.println("There are no vacancies for index " + newIndex);
-				}
-				else
-					System.out.println("The new index have clashes with your current registered courses!");
+						System.out.println("The new index have clashes with your current registered courses!");
+				}else
+					System.out.println("You have not registered for index " + oldIndex + " before!");
 			}
 			else
 			System.out.println("Error in course index!");
@@ -320,11 +367,11 @@ public class StudentCourse implements Serializable {
 		for(int i = 0; i < list.size(); i++)
 		{
 			StudentCourse sc = (StudentCourse)list.get(i);
-			if(sc.getCourseCode().equals(Integer.toString(courseIndex)))
+			if(sc.getCourseIndex()==courseIndex)
 			{
 				found++;
 				if(found ==1)
-					System.out.println("Name\tGender\tNationality");
+					System.out.println("Name\t\tGender\tNationality");
 				Student stud = Student.getStudentByMatric(sc.getMatricNumber());
 				System.out.println(stud.getName() + "\t" + stud.getGender() + "\t" + stud.getNationality());
 			}
@@ -386,7 +433,7 @@ public class StudentCourse implements Serializable {
 	}
 
 	public static List getRegisteredList() {
-		return getRegisteredList("testfile.dat");
+		return getRegisteredList("studentRecords.dat");
 	}
 	
 	public static List getRegisteredList(String filename) {

@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 public class Course implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String courseCode;
 	private String school;
@@ -8,7 +9,7 @@ public class Course implements Serializable {
 	private ArrayList<CourseIndex> cIndexList;
 	// private static ArrayList<Course> courseList; //StudentCourse will hold
 	// the courseList
-	private TimeSlot lecture;
+	private ArrayList<TimeSlot> lectureList;
 
 	public Course() {
 	}
@@ -17,10 +18,11 @@ public class Course implements Serializable {
 		this.courseCode = courseCode;
 	}
 
-	public Course(String name, String courseCode, String school) {
+	public Course(String name, String courseCode, String school, ArrayList<TimeSlot> lect) {
 		this.name = name;
 		this.courseCode = courseCode;
 		this.school = school;
+		this.lectureList = lect;
 		this.cIndexList = new ArrayList<CourseIndex>();
 	}
 
@@ -81,12 +83,22 @@ public class Course implements Serializable {
 			System.out.println("Decrement failed.");
 	}
 
-	public void addToIndex(int index) {
+	public Course addToIndex(int index) {
 		if (selectIndex(index)) {
-			cIndexList.get(indexPointer).incrementVacancy();
-			System.out.println("Vacancy incremented.");
+			CourseIndex cind = cIndexList.get(indexPointer);
+			cind.incrementVacancy();
+			if(cind.getWaitListSize()>0)
+			{
+				String mNo = cind.getWaitListStudent();
+				StudentCourse.addFromWaitList(mNo, courseCode, cind.getIndex());
+				cind.decrementVacancy();
+				save();
+			}
+			else
+				System.out.println("Vacancy incremented.");
 		} else
 			System.out.println("Increment failed.");
+		return this;
 	}
 
 	public int retrieveVacancy(int index) {
@@ -113,11 +125,11 @@ public class Course implements Serializable {
 		return false;
 	}
 
-	public static List getCoursedList() {
-		return getCoursedList("courselist.dat");
+	public static List getCourseList() {
+		return getCourseList("courselist.dat");
 	}
 
-	public static List getCoursedList(String filename) {
+	public static List getCourseList(String filename) {
 		List list = null;
 		try {
 			list = FileIO.readInFile(filename);
@@ -131,17 +143,31 @@ public class Course implements Serializable {
 	public static void save(List list) {
 		FileIO.writeToFile("courselist.dat", list);
 	}
+	
+	public void save()
+	{
+		List list = getCourseList();
+		for(int i=0;i<list.size();i++)
+		{
+			Course c = (Course)list.get(i);
+			if(c.getCourseCode().equals(courseCode))
+			{
+				list.set(i, this);
+				save(list);
+				break;
+			}
+		}
+	}
 
 	public static boolean courseExist(String courseCode) {
-		List list = getCoursedList();
-		// List<Course> courseList = new ArrayList<Course>();
+		List list = getCourseList();
 
 		boolean breakout = false;
 		try {
 			if (list.size() != 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Course course = (Course) list.get(i);
-					if (course.getCourseCode().toString() == courseCode) {
+					if (course.getCourseCode().toString().equals(courseCode)) {
 						breakout = true;
 						break;
 					}
@@ -152,10 +178,36 @@ public class Course implements Serializable {
 		return breakout;
 	}
 
-	public void addCourse(String coursename, String coursecode, String school) {
-		List list = getCoursedList();
+	public void addCourse(String coursename, String cCode, String school) {
+		List list = getCourseList();
+		Scanner input = new Scanner(System.in);
 		try {
-			Course course = new Course(coursename, courseCode, school);
+			int choice = 0, addLect =0;
+			ArrayList<TimeSlot> lectList = new ArrayList();
+			lectList.add(createTimeSlot("lecture"));
+			while(addLect != 2)
+			{
+				System.out.println("Do you wish to add more lecture sessions to the course? 1-Yes 2-No");
+				addLect = input.nextInt();
+				if(addLect == 1)
+					lectList.add(createTimeSlot("lecture"));
+			}
+			Course course = new Course(coursename, cCode, school, lectList);
+			while(choice != 2)
+			{
+				System.out.print("Do you wish to add index to the course? 1-Yes 2-No");
+				choice = input.nextInt();
+				switch(choice)
+				{
+				case 1:
+					course.addNewIndex();
+					break;
+				case 2:
+					break;
+				default:
+				}
+				
+			}
 			list.add(course);
 			save(list);
 			System.out.println("Course added successfully!");
@@ -163,10 +215,55 @@ public class Course implements Serializable {
 			System.out.println("Error occured. Course is not added.");
 		}
 	}
+	
+	public void addNewIndex()
+	{
+		Scanner input = new Scanner(System.in);
+		TimeSlot tut = null, lab = null;
+		System.out.print("Enter index no: ");
+		int indexNo = input.nextInt();
+		if(!indexExist(indexNo))
+		{
+			System.out.print("Enter group name: ");
+			String groupName = input.next();
+			System.out.print("Enter number of vacancies: ");
+			int vacancy = input.nextInt();
+			System.out.print("Do you wish to add lab? 1-Yes 2-No");
+			if(input.nextInt() == 1)
+			{
+				lab = createTimeSlot("lab");
+			}
+			System.out.print("Do you wish to add tutorial? 1-Yes 2-No");
+			if(input.nextInt() == 1)
+			{
+				lab = createTimeSlot("tutorial");
+			}
+			AddtocIndexList(indexNo, vacancy, groupName, tut, lab);
+		}
+	}
+	
+	public TimeSlot createTimeSlot(String classType)
+	{
+		Scanner input = new Scanner(System.in);
+		TimeSlot ts = null;
+		try
+		{
+		System.out.print("Enter day for " + classType + " (1-Monday 5-Friday): ");
+		int day = input.nextInt();
+		System.out.print("Enter start time for " + classType + " (HH:MM): ");
+		String start = input.next();
+		System.out.print("Enter end time for " + classType + " (HH:MM): ");
+		String end = input.next();
+		System.out.print("Enter venue for "+ classType +": ");
+		String venue = input.next();
+		ts = new TimeSlot(day, start, end, venue);
+		return ts;
+		}
+		catch(Exception e){return ts;}
+	}
 
 	public void editCourseName(String coursename, String courseCode) {
-		List list = getCoursedList();
-		// List<Course> courseList = new ArrayList<Course>();
+		List list = getCourseList();
 		try {
 			if (list.size() != 0) {
 				for (int i = 0; i < list.size(); i++) {
@@ -180,11 +277,10 @@ public class Course implements Serializable {
 		} catch (Exception e) {
 		}
 		save(list);
-
 	}
 
 	public void editSchool(String courseCode, String school) {
-		List list = getCoursedList();
+		List list = getCourseList();
 		// List<Course> courseList = new ArrayList<Course>();
 		try {
 			if (list.size() != 0) {
@@ -200,10 +296,28 @@ public class Course implements Serializable {
 		}
 		save(list);
 	}
+	
+	public void editIndex(int oldIndex, int newIndex)
+	{
+		try{
+			for(int i = 0; i<cIndexList.size();i++)
+			{
+				CourseIndex cIndex = cIndexList.get(i);
+				if(cIndex.getIndex() == oldIndex)
+				{
+					cIndex.setIndex(newIndex);
+					StudentCourse.adminUpdateCourseIndex(courseCode, oldIndex, newIndex);
+				}
+			}
+			save();
+		}
+		catch(Exception e)
+		{}
+	}
 
 	public static Course getCourse(String coursecode) {
 		Course c = null;
-		List courselist = getCoursedList();
+		List courselist = getCourseList();
 		for (int i = 0; i < courselist.size(); i++) {
 			Course course = (Course) courselist.get(i);
 			if (course.getCourseCode().equals(coursecode))
@@ -213,6 +327,8 @@ public class Course implements Serializable {
 	}
 
 	public boolean indexExist(int index) {
+		if(cIndexList.size()>0)
+		{
 		for(int i=0; i<cIndexList.size(); i++)
 		{
 			CourseIndex cIndex=(CourseIndex)cIndexList.get(i);
@@ -222,13 +338,17 @@ public class Course implements Serializable {
 			}
 		}
 		return false;
-
+		}
+		else return false;
 	}
 	
 	public List getTimeSlots(int courseIndex)
 	{
 		List<TimeSlot> list = new ArrayList();
-		list.add(lecture);
+		for(int j = 0; j<lectureList.size(); j++)
+		{
+			list.add(lectureList.get(j));	
+		}
 		for(int i = 0; i < cIndexList.size(); i++)
 		{
 			CourseIndex cIndex = cIndexList.get(i);
@@ -243,15 +363,45 @@ public class Course implements Serializable {
 	
 	public boolean checkClash(List<TimeSlot> tsList, int courseIndex)
 	{
+		boolean clash = false;
+		for(int j = 0; j < lectureList.size(); j++)
+		{
+			if(!clash)
+			{
+				clash = lectureList.get(j).hasClash(tsList);
+			}
+		}
 		for(int i = 0; i < cIndexList.size(); i++)
 		{
 			CourseIndex cIndex = cIndexList.get(i);
 			if(courseIndex == cIndex.getIndex())
 			{
-				return cIndex.checkClash(tsList) || lecture.hasClash(tsList);
+				return cIndex.checkClash(tsList) || clash;
 			}
 		}
 		return false;
+	}
+	
+	public void addToWaitList(int courseIndex, String matricNo) {
+		for(int i = 0; i<cIndexList.size(); i++)
+		{
+			CourseIndex cIndex = cIndexList.get(i);
+			if(cIndex.getIndex() == courseIndex)
+			{
+				cIndex.addWaitList(matricNo);
+				save();
+			}
+		}
+		
+	}
+	
+	public void printIndexes()
+	{
+		for(int i = 0; i < cIndexList.size(); i++)
+		{
+			CourseIndex cIndex = cIndexList.get(i);
+			System.out.println( i+1 + "\t" + cIndex.getIndex() + "\t" + cIndex.getGroupName());
+		}
 	}
 	
 	public void printStudents()

@@ -128,6 +128,7 @@ public class Admin extends User {
 			System.out.println("Please enter either choice 1 or 2");
 		}
 	}
+	
 	public void printStudentListByIndex(){
 		AdminCourse adminc=new AdminCourse();
 		adminc.printStudentListByIndex();
