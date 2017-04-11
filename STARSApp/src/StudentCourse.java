@@ -127,6 +127,8 @@ public class StudentCourse implements Serializable {
 				} else
 					System.out.println("Course has been registered previously.");
 			}
+			else
+				System.out.println("Course code does not exist.");
 		}
 	}
 
