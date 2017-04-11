@@ -1,23 +1,20 @@
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public abstract class User implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String username;
 	private String password;
 	private String type;
 	
 	User(){}
 	
-	User(String u, String p, String t)
-	{
+	User(String u, String p, String t) {
 		username = u;
 		password = p;
 		type = t;
-	}
-	
-	User(String u)
-	{
-		username = u;
 	}
 	
 	public String getUsername() {
@@ -44,7 +41,30 @@ public abstract class User implements Serializable {
 		this.type = type;
 	}
 	
-	abstract void startSession();
-
+	public static List getUserList() {
+		return getUserList("userList.dat");
+	}
 	
+	public static List getUserList(String filename) {
+		List list = null;
+		try {
+			list = FileIO.readInFile(filename);
+		} catch (Exception e) {
+		}
+		if (list == null)
+			list = new ArrayList();
+		return list;
+	}
+	
+	public void saveUserList(List list) {
+		FileIO.writeToFile("userList.dat", list);
+	}
+
+	public void addNewUserToFile() {
+		List list = getUserList();
+		list.add(this);
+		saveUserList(list);
+	}
+	
+	abstract void startSession();
 }

@@ -6,16 +6,18 @@ public class InitFiles {
 	
 	public static void init()
 	{	
+		PasswordHash pwHash = new PasswordHash();
+		
 		List studList = new ArrayList();
-		Student StudentA = new Student("aaa074", Integer.toString("123456".hashCode()), "U1620736G", "Student1", 'F', "Singaporean");
-		Student StudentB = new Student("bbb123", Integer.toString("654321".hashCode()), "U1622603D", "Student2", 'F', "Singaporean");
-		Student StudentC = new Student("ccc123", Integer.toString("123456".hashCode()), "U1621531K", "Student3", 'F', "Singaporean");
-		Student StudentD = new Student("ddd123", Integer.toString("654321".hashCode()), "U1622123D", "Student4", 'F', "Malaysian");
-		Student StudentE = new Student("eee123", Integer.toString("123456".hashCode()), "U1622124E", "Student5", 'M', "Singaporean");
-		Student StudentF = new Student("fff123", Integer.toString("654321".hashCode()), "U1622125F", "Student6", 'F', "Singaporean");
-		Student StudentG = new Student("ggg123", Integer.toString("123456".hashCode()), "U1622126G", "Student7", 'M', "Malaysian");
-		Student StudentH = new Student("hhh123", Integer.toString("654321".hashCode()), "U1622127H", "Student8", 'F', "Singaporean");
-		Student StudentI = new Student("iii123", Integer.toString("123456".hashCode()), "U1622128I", "Student9", 'M', "Singaporean");
+		Student StudentA = new Student("aaa074", pwHash.hash("123456","aaa074"), "U1620736G", "Student1", 'F', "Singaporean");
+		Student StudentB = new Student("bbb123", pwHash.hash("654321","bbb123"), "U1622603D", "Student2", 'F', "Singaporean");
+		Student StudentC = new Student("ccc123", pwHash.hash("123456","ccc123"), "U1621531K", "Student3", 'F', "Singaporean");
+		Student StudentD = new Student("ddd123", pwHash.hash("654321","ddd123"), "U1622123D", "Student4", 'F', "Malaysian");
+		Student StudentE = new Student("eee123", pwHash.hash("123456","eee123"), "U1622124E", "Student5", 'M', "Singaporean");
+		Student StudentF = new Student("fff123", pwHash.hash("654321","fff123"), "U1622125F", "Student6", 'F', "Singaporean");
+		Student StudentG = new Student("ggg123", pwHash.hash("123456","ggg123"), "U1622126G", "Student7", 'M', "Malaysian");
+		Student StudentH = new Student("hhh123", pwHash.hash("654321","hhh123"), "U1622127H", "Student8", 'F', "Singaporean");
+		Student StudentI = new Student("iii123", pwHash.hash("123456","iii123"), "U1622128I", "Student9", 'M', "Singaporean");
 		studList.add(StudentA);
 		studList.add(StudentB);
 		studList.add(StudentC);
@@ -26,6 +28,31 @@ public class InitFiles {
 		studList.add(StudentH);
 		studList.add(StudentI);
 		FileIO.writeToFile("studentList.dat", studList);
+		
+		
+		List userList = new ArrayList();
+		User u1 = new Admin("123456", pwHash.hash("abdced","123456"));
+		User u2 = StudentA;
+		User u3 = StudentB;
+		User u4 = StudentC;
+		User u5 = StudentD;
+		User u6 = StudentE;
+		User u7 = StudentF;
+		User u8 = StudentG;
+		User u9 = StudentH;
+		User u10 = StudentI;
+		userList.add(u1);
+		userList.add(u2);
+		userList.add(u3);
+		userList.add(u4);
+		userList.add(u5);
+		userList.add(u6);
+		userList.add(u7);
+		userList.add(u8);
+		userList.add(u9);
+		userList.add(u10);
+		FileIO.writeToFile("userList.dat", userList);
+		
 		
 		List courseList = new ArrayList();
 		TimeSlot ts1 = new TimeSlot(DayOfWeek.WEDNESDAY,LocalTime.parse("13:30"),LocalTime.parse("14:30"), "TR+37");
@@ -42,10 +69,10 @@ public class InitFiles {
 		lectList.add(ts9);
 		lectList.add(ts10);
 		Course c1 = new Course("Human Computer Interaction", "CZ2004", "School of Computer Science and Engineering", lectList);
-		c1.AddtocIndexList(10241, 0, "FSP1", ts1, ts2);
-		c1.AddtocIndexList(10242, 1, "FSP2", ts3, ts4);
-		c1.AddtocIndexList(10243, 0, "FSP3", ts5, ts6);
-		c1.AddtocIndexList(10244, 0, "FSP4", ts7, ts8);
+		c1.AddtocIndexList(10241, 0, 2, "FSP1", ts1, ts2);
+		c1.AddtocIndexList(10242, 1, 2, "FSP2", ts3, ts4);
+		c1.AddtocIndexList(10243, 0, 2, "FSP3", ts5, ts6);
+		c1.AddtocIndexList(10244, 0, 2, "FSP4", ts7, ts8);
 		
 		ts1 = new TimeSlot(DayOfWeek.MONDAY,LocalTime.parse("09:30"),LocalTime.parse("10:30"), "TR+37");
 		ts2 = new TimeSlot(DayOfWeek.MONDAY,LocalTime.parse("10:30"),LocalTime.parse("12:30"), "SWLAB1");
@@ -61,10 +88,10 @@ public class InitFiles {
 		lectList2.add(ts9);
 		lectList2.add(ts10);
 		Course c2 = new Course("Operating Systems", "CZ2005", "School of Computer Science and Engineering", lectList2);
-		c2.AddtocIndexList(10251, 0, "SSR1", ts1, ts2);
-		c2.AddtocIndexList(10252, 1, "SSR2", ts3, ts4);
-		c2.AddtocIndexList(10253, 0, "SSR3", ts5, ts6);
-		c2.AddtocIndexList(10254, 0, "BCG4", ts7, ts8);
+		c2.AddtocIndexList(10251, 0, 2, "SSR1", ts1, ts2);
+		c2.AddtocIndexList(10252, 1, 2, "SSR2", ts3, ts4);
+		c2.AddtocIndexList(10253, 0, 2, "SSR3", ts5, ts6);
+		c2.AddtocIndexList(10254, 0, 2, "BCG4", ts7, ts8);
 		
 		
 		ts1 = new TimeSlot(DayOfWeek.WEDNESDAY,LocalTime.parse("11:30"),LocalTime.parse("12:30"), "TR+8");
@@ -75,7 +102,7 @@ public class InitFiles {
 		lectList3.add(ts9);
 		lectList3.add(ts10);
 		Course c3 = new Course("Object Oriented Design and Programming", "CZ2002", "School of Computer Science and Engineering", lectList3);
-		c3.AddtocIndexList(10251, 2, "FSP1", ts1, ts2);
+		c3.AddtocIndexList(10251, 2, 2, "FSP1", ts1, ts2);
 		
 		courseList.add(c1);
 		courseList.add(c2);

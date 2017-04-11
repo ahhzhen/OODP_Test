@@ -10,19 +10,10 @@ public class Student extends User implements Serializable {
 	private Date start;
 	private Date end;
 	private CourseIndex[] cList;
-	
-	
-	 //create linked list
-    LinkedList<studentRecords> list = new LinkedList<studentRecords>();    
-    String inFile = "studentRecords.txt";
-    //inititate readers to null
-    FileReader fr = null;
-    BufferedReader br = null;
     
     Student(){super();}
     
-	Student(String username, String password, String matricNo, String name, char gender, String nationality)
-	{
+	Student(String username, String password, String matricNo, String name, char gender, String nationality) {
 		super(username,password,"Student");
 		this.matricNo = matricNo;
 		this.name = name;
@@ -31,8 +22,7 @@ public class Student extends User implements Serializable {
 		setInitialDate(); 
 	}
 	
-	private void updateStudentToFile()
-	{
+	private void updateStudentToFile() {
 		List list = getStudentList();
 		for(int i = 0; i < list.size(); i++)
 		{
@@ -45,24 +35,22 @@ public class Student extends User implements Serializable {
 		save(list);
 	}
 	
-	public void setInitialDate()
-	{
+	public void setInitialDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, 3);
-        cal.set(Calendar.DATE, 10);
+        cal.set(Calendar.DATE, 11);
         cal.set(Calendar.YEAR, 2017);
-        cal.set(Calendar.HOUR_OF_DAY, 2);
-        cal.set(Calendar.MINUTE,50);
+        cal.set(Calendar.HOUR_OF_DAY, 11);
+        cal.set(Calendar.MINUTE,00);
         cal.set(Calendar.SECOND,00);
         //cal.set(Calendar.AM_PM, 1);
         this.start = cal.getTime();
         
-        cal.add(Calendar.HOUR_OF_DAY, 1);
+        cal.add(Calendar.HOUR_OF_DAY, 10);
         this.end = cal.getTime();
 	}
 	
-	public void setStartDate(Date newDate)
-	{
+	public void setStartDate(Date newDate) {
 		this.start = newDate;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(newDate);
@@ -83,23 +71,20 @@ public class Student extends User implements Serializable {
 	
 	public Date getEndDate(){return end;}
 	
-	public String printStartDate()
-	{
+	public String printStartDate() {
 		SimpleDateFormat ft = new SimpleDateFormat("E dd/MM/yyyy HH:mm:ss");
 		return ft.format(getStartDate());
 	}
 	
-	public String printEndDate()
-	{
+	public String printEndDate() {
 		SimpleDateFormat ft = new SimpleDateFormat("E dd/MM/yyyy HH:mm:ss");
 		return ft.format(getEndDate());
 	}
 	
-	public void startSession()
-	{
+	public void startSession() {
 		int choice = -1;
 		Scanner input = new Scanner(System.in);
-		while(choice!= 7)
+		while(choice!= 8)
 		{
 			displayMenu();
 			System.out.print("Please select choice from menu: ");
@@ -130,6 +115,9 @@ public class Student extends User implements Serializable {
 				swopIndexNumber();
 				break;
 			case 7:
+				StudentCourse.printTimeTable(matricNo);
+				break;
+			case 8:
 				quit();
 				break;
 			default:System.out.println("Wrong input detected, please try again!");
@@ -137,8 +125,7 @@ public class Student extends User implements Serializable {
 		}
 	}
 	
-	public void displayMenu()
-	{
+	public void displayMenu() {
 		System.out.println("");
 		System.out.println("1. Add Course");
 		System.out.println("2. Drop Course");
@@ -146,11 +133,11 @@ public class Student extends User implements Serializable {
 		System.out.println("4. Check vacancies available");
 		System.out.println("5. Change index number of a course");
 		System.out.println("6. Swop index number with another student");
-		System.out.println("7. Quit");
+		System.out.println("7. Print Timetable");
+		System.out.println("8. Quit");
 	}
 	
-	public static Student getStudentByUsername(String username)
-	{
+	public static Student getStudentByUsername(String username) {
 		Student s = null;
 		List studList = getStudentList();
 		for(int i = 0; i < studList.size();i++)
@@ -162,8 +149,7 @@ public class Student extends User implements Serializable {
 		return s;
 	}
 	
-	public static Student getStudentByMatric(String matricNo)
-	{
+	public static Student getStudentByMatric(String matricNo) {
 		Student s = null;
 		List studList = getStudentList();
 		for(int i = 0; i < studList.size();i++)
@@ -175,8 +161,13 @@ public class Student extends User implements Serializable {
 		return s;
 	}
 	
-	public boolean checkAccessPeriod()
-	{
+	public static boolean checkStudentExist(String matricNo, String username) {
+		Student s1 = getStudentByUsername(username);
+		Student s2 = getStudentByMatric(matricNo);
+		return (s1 == null && s2 == null);
+	}
+	
+	public boolean checkAccessPeriod() {
 		Date currentTime = new Date();
 		if(currentTime.after(start) && currentTime.before(end))
 			return true;
@@ -186,19 +177,19 @@ public class Student extends User implements Serializable {
 		}
 	}
 	
-/*	public static boolean checkPassword(String password)
-	{
+	public boolean checkPassword(String password) {
 		PasswordHash pHash = new PasswordHash();
-		if(pHash.hash(password).equals(getPassword()))
+		if(pHash.hash(password, getUsername()).equals(getPassword()))
 			return true;
 		return false;
-	}*/
+	}
 	
-	public void addNewStudentToFile()
-	{
+	public void addNewStudentToFile() {
 		List list = getStudentList();
 		list.add(this);
 		save(list);
+		User u = (User) this;
+		u.addNewUserToFile();
 	}
 
 	public void addCourse() {
@@ -243,13 +234,11 @@ public class Student extends User implements Serializable {
 		System.out.println("Thank you for using STARSApp");
 	}
 	
-	public static List getStudentList()
-	{
+	public static List getStudentList() {
 		return getStudentList("studentList.dat");
 	}
 	
-	public static List getStudentList(String filename)
-	{
+	public static List getStudentList(String filename) {
 		List list = null;
 		try {
 			list = FileIO.readInFile(filename);
@@ -260,8 +249,7 @@ public class Student extends User implements Serializable {
 		return list;
 	}
 	
-	public void save(List list)
-	{
+	public void save(List list) {
 		FileIO.writeToFile("studentList.dat", list);
 	}
 

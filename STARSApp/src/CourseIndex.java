@@ -6,6 +6,7 @@ public class CourseIndex implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int index;
 	private int vacancy;
+	private int totalVacancy;
 	private String groupName;
 	private TimeSlot tutorial;
 	private TimeSlot lab;
@@ -19,9 +20,10 @@ public class CourseIndex implements Serializable {
 		this.groupName = gname;
 	}
 	
-	CourseIndex(int index, int vacancy, String gname, TimeSlot tut, TimeSlot lab) {//, Lesson tut, Lesson lab) {
+	CourseIndex(int index, int vacancy, int tVacancy, String gname, TimeSlot tut, TimeSlot lab) {//, Lesson tut, Lesson lab) {
 		this.index = index;
 		this.vacancy = vacancy;
+		this.totalVacancy = tVacancy;
 		this.groupName = gname;
 		this.tutorial = tut;
 		this.lab = lab;
@@ -35,7 +37,7 @@ public class CourseIndex implements Serializable {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-
+	
 	public int getVacancy() {
 		return vacancy;
 	}
@@ -43,14 +45,20 @@ public class CourseIndex implements Serializable {
 	public void setVacancy(int vacancy) {
 		this.vacancy = vacancy;
 	}
+
+	public int getTotalVacancy() {
+		return totalVacancy;
+	}
+
+	public void setTotalVacancy(int vacancy) {
+		this.totalVacancy = vacancy;
+	}	
 	
-	public String getGroupName()
-	{
+	public String getGroupName() {
 		return groupName;
 	}
 	
-	public void setGroupName(String gName)
-	{
+	public void setGroupName(String gName) {
 		this.groupName = gName;
 	}
 
@@ -63,13 +71,11 @@ public class CourseIndex implements Serializable {
 			vacancy++;
 	}
 	
-	public TimeSlot getLab()
-	{
+	public TimeSlot getLab() {
 		return lab;
 	}
 	
-	public TimeSlot getTutorial()
-	{
+	public TimeSlot getTutorial() {
 		return tutorial;
 	}
 
@@ -77,8 +83,7 @@ public class CourseIndex implements Serializable {
 		return (index == this.index);
 	}
 	
-	public boolean checkClash(List<TimeSlot> timeSlotList)
-	{
+	public boolean checkClash(List<TimeSlot> timeSlotList) {
 		boolean l = false,t = false;
 		if(lab != null)
 			l = lab.hasClash(timeSlotList);
@@ -91,13 +96,23 @@ public class CourseIndex implements Serializable {
 		waitList.add(matricNo);
 	}
 	
-	public int getWaitListSize()
-	{
+	public boolean existInWaitList(String matricNo) {
+		if(waitList.size()>0) {
+			for(int i = 0; i<waitList.size();i++) {
+				if(waitList.get(i).equals(matricNo))
+					return true;
+			}
+			return false;
+		}
+		else
+			return false;
+	}
+	
+	public int getWaitListSize() {
 		return waitList.size();
 	}
 	
-	public String getWaitListStudent()
-	{
+	public String getWaitListStudent() {
 		String stud = waitList.get(0);
 		waitList.remove(0);
 		return stud;

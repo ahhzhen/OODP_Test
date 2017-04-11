@@ -1,7 +1,9 @@
 import java.util.List;
 import java.util.Scanner;
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class StudentCourse implements Serializable {
 
@@ -113,12 +115,13 @@ public class StudentCourse implements Serializable {
 						else
 						{
 							System.out.println("No available vacancies for index " + courseIndex);
-							System.out.println("Do you wish to be in the waitlist?  1 - Yes  2 - No ");
-							int choice = input.nextInt();
-							if(choice == 1)
+							if(!course.existInWaitList(courseIndex,matricNo))
 							{
 								course.addToWaitList(courseIndex, matricNo);
+								System.out.println("You have been added onto the waitlist!");
 							}
+							else
+								System.out.println("You are on the waitlist already");
 						}
 					}
 				} else
@@ -127,7 +130,7 @@ public class StudentCourse implements Serializable {
 		}
 	}
 
-	public static boolean addStudentCourseEntry(String matricNo, String courseCode, int courseIndex){
+	public static boolean addStudentCourseEntry(String matricNo, String courseCode, int courseIndex) {
 		List list = getRegisteredList();
 		try {
 			StudentCourse sc = new StudentCourse(matricNo, courseCode, courseIndex);
@@ -139,8 +142,7 @@ public class StudentCourse implements Serializable {
 		{return false;}
 	}
 	
-	public static void addFromWaitList(String matricNo, String courseCode, int courseIndex)
-	{
+	public static void addFromWaitList(String matricNo, String courseCode, int courseIndex) {
 		if(addStudentCourseEntry(matricNo, courseCode, courseIndex))
 		{
 			//email student
@@ -148,8 +150,8 @@ public class StudentCourse implements Serializable {
 			String mailTo = studentId +"@e.ntu.edu.sg";
 			String password="cz2002oodp";
 			String mailFrom = "oodp2002@gmail.com";
-			String mailSubject = "random p******";
-			String mailText = "You have been successfully registered to " + courseCode + " - " + courseIndex + ". You may login to STARS to see.";
+			String mailSubject = "Course Registered";
+			String mailText = "Dear " + matricNo + ",\nYou have been successfully registered to " + courseCode + " - " + courseIndex + ". You may login to STARS to see.";
 			EmailTest.send(mailFrom,password,mailTo,mailSubject,mailText);
 		}
 		else
@@ -191,11 +193,11 @@ public class StudentCourse implements Serializable {
 				System.out.println("------------------------------------------");
 			}
 
-			Scanner scannerInput = new Scanner(System.in);
+			Scanner input = new Scanner(System.in);
 			System.out.println("Please enter course code you wish to drop:");
-			courseCode = scannerInput.nextLine();
+			courseCode = input.nextLine();
 			System.out.println("Please enter course index you wish to drop:");
-			courseIndex = scannerInput.nextInt();
+			courseIndex = input.nextInt();
 			if (removeStudentCourseEntry(matricNumber, courseCode, courseIndex)) // statement is true when entry has been removed from list
 				System.out.println("Course " + courseCode + "," + courseIndex + " has been dropped.");
 			else
@@ -224,8 +226,7 @@ public class StudentCourse implements Serializable {
 		}
 	}
 
-	public static void checkVacancy()
-	{
+	public static void checkVacancy() {//trycatch
 		String courseCode;
 		int courseIndex;
 		Scanner input = new Scanner(System.in);
@@ -247,14 +248,14 @@ public class StudentCourse implements Serializable {
 
 		String courseCode;
 		int newIndex, oldIndex;
-		Scanner scanInput = new Scanner(System.in);
+		Scanner input = new Scanner(System.in);
 
 		System.out.print("Enter course code:");
-		courseCode = scanInput.nextLine();
+		courseCode = input.nextLine();
 		System.out.print("Enter old course index:");
-		oldIndex = scanInput.nextInt();
+		oldIndex = input.nextInt();
 		System.out.print("Enter new course index:");
-		newIndex = scanInput.nextInt();
+		newIndex = input.nextInt();
 
 		// check if course and courseIndex exists
 		if(courseExist(courseCode))
@@ -274,12 +275,18 @@ public class StudentCourse implements Serializable {
 								StudentCourse studC = (StudentCourse) list.get(i);
 								if (studC.getCourseCode().equals(courseCode) && studC.getCourseIndex() == oldIndex 
 										&& studC.getMatricNumber().equals(matricNumber)) {
+									try{
 									studC.setCourseIndex(newIndex);
 									c.minusFromIndex(newIndex); //decrease vacancy for new index
 									c = c.addToIndex(oldIndex); //increase vacancy for old index
 									c.save();
 									System.out.println("Index for course " + courseCode + " has been changed from " + oldIndex + " to "
-											+ newIndex + " .");
+											+ newIndex + " .");									
+									}
+									catch(Exception e)
+									{
+										System.out.println("Error occued. ):");
+									}
 								}
 							save(list);
 							}
@@ -299,7 +306,7 @@ public class StudentCourse implements Serializable {
 		System.out.println("Course code/course index does not exist.");
 	}
 
-	public static void adminUpdateCourseIndex(String courseCode, int oldIndex, int newIndex) {
+	public static void adminUpdateCourseIndex(String courseCode, int oldIndex, int newIndex) { //trycatch
 		List list = getRegisteredList();
 		int found = 0;
 
@@ -317,21 +324,21 @@ public class StudentCourse implements Serializable {
 	public static void swapCourse(String matricNumber) {
 		String courseCode, studBMatric, password;
 		int swopIndex, oldIndex;
-		Scanner scanInput = new Scanner(System.in);
+		Scanner input = new Scanner(System.in);
 
 		System.out.println("Enter course code:");
-		courseCode = scanInput.nextLine();
+		courseCode = input.nextLine();
 		System.out.println("Enter index:");
-		oldIndex = scanInput.nextInt();
+		oldIndex = input.nextInt();
 
 		if (enrolled(matricNumber, courseCode, oldIndex))// check if current student have registered for the old index
 		{
 			System.out.println("Enter student matriculation number to swap with:");
-			studBMatric = scanInput.nextLine();
+			studBMatric = input.nextLine();
 			System.out.println("Enter password of student:");
-			password = scanInput.nextLine();
+			password = input.nextLine();
 			System.out.println("Enter index number to swap with:");
-			swopIndex = scanInput.nextInt();
+			swopIndex = input.nextInt();
 			if (enrolled(studBMatric, courseCode, swopIndex))// check if studentB have registered for the swop index
 			{
 				//check for clash
@@ -360,8 +367,50 @@ public class StudentCourse implements Serializable {
 		}
 	}
 	
-	public static void printStudents(int courseIndex)
-	{
+	public static void printTimeTable(String matricNumber) {
+		List list = getCoursesRegistered(matricNumber);
+		List tsList = getTimeSlots(list);
+		List cInfoList = getCourseInfoListWithTimeSlots(list);
+		sortTimeSlots(tsList, cInfoList);
+		DayOfWeek d = DayOfWeek.SUNDAY;
+		//Collections.sort(tsList);
+		System.out.println("TIMETABLE");
+		for(int i = 0; i<tsList.size();i++)
+		{
+			TimeSlot ts = (TimeSlot)tsList.get(i);
+			StudentCourse sc = (StudentCourse)cInfoList.get(i);
+			if(ts.getDay().getValue()!=d.getValue())
+			{
+				d = ts.getDay();
+				System.out.println("");
+				System.out.println("-----------------------------------------");
+				System.out.println(d.toString());
+				System.out.println("-----------------------------------------");
+			}
+			System.out.println(sc.getCourseCode() + "\t" + sc.getCourseIndex() + "\t" + ts.getStart().toString() + " - " + ts.getEnd().toString() +"\t" + ts.getVenue());
+		}
+	}
+	
+	public static void sortTimeSlots(List<Comparable> tsList, List<StudentCourse> cInfoList) {
+		int min;
+		Comparable temp;
+		StudentCourse scTemp;
+		for (int index = 0; index < tsList.size()-1; index++) {
+			min = index;
+			for (int scan = index+1; scan < tsList.size(); scan++)
+				if (tsList.get(scan).compareTo(tsList.get(min)) > 0)
+					min = scan;
+			// Swap the values
+			temp = tsList.get(min);
+			tsList.set(min, tsList.get(index));
+			tsList.set(index,temp);
+			scTemp = cInfoList.get(min);
+			cInfoList.set(min, cInfoList.get(index));
+			cInfoList.set(index,scTemp);
+		}
+	}
+	
+	public static void printStudents(int courseIndex) { //errormessage
 		int found = 0;
 		List list = getRegisteredList();
 		for(int i = 0; i < list.size(); i++)
@@ -380,8 +429,7 @@ public class StudentCourse implements Serializable {
 			System.out.println("No student have registered for the course");
 	}
 
-	public static void printStudents(String courseCode)
-	{
+	public static void printStudents(String courseCode) { //errormessage
 		int found = 0;
 		List list = getRegisteredList();
 		for(int i = 0; i < list.size(); i++)
@@ -391,7 +439,7 @@ public class StudentCourse implements Serializable {
 			{
 				found++;
 				if(found ==1)
-					System.out.println("Name\tGender\tNationality");
+					System.out.println("Name\t\tGender\tNationality");
 				Student stud = Student.getStudentByMatric(sc.getMatricNumber());
 				System.out.println(stud.getName() + "\t" + stud.getGender() + "\t" + stud.getNationality());
 			}
@@ -400,9 +448,8 @@ public class StudentCourse implements Serializable {
 			System.out.println("No student have registered for the course");
 	}
 	
-	public static List getTimeSlots(List<StudentCourse> studentList)
-	{
-		List<TimeSlot> consolidatedList = new ArrayList();
+	public static List getCourseInfoListWithTimeSlots(List<StudentCourse> studentList) { //errormessage
+		List<StudentCourse> consolidatedList = new ArrayList();
 		for(int i = 0; i < studentList.size(); i++)
 		{
 			StudentCourse sc = studentList.get(i);
@@ -411,20 +458,31 @@ public class StudentCourse implements Serializable {
 			List timeList = c.getTimeSlots(courseIndex);
 			for(int j = 0; j<timeList.size();j++)
 			{
-				consolidatedList.add((TimeSlot)timeList.get(i));
+				consolidatedList.add((StudentCourse)studentList.get(i));
 			}
 		}
 		return consolidatedList;
 	}
 	
-	public static List getTimeSlots(List<StudentCourse> studentList, int index)
-	{
+	public static List getTimeSlots(List<StudentCourse> studentList) { //errormessage
 		List<TimeSlot> consolidatedList = new ArrayList();
-		for(int i = 0; i < studentList.size(); i++)
-		{
+		for(int i = 0; i < studentList.size(); i++) {
 			StudentCourse sc = studentList.get(i);
-			if(sc.getCourseIndex()==index)
-			{
+			Course c = Course.getCourse(sc.getCourseCode());
+			int courseIndex = (sc.getCourseIndex());
+			List timeList = c.getTimeSlots(courseIndex);
+			for(int j = 0; j<timeList.size();j++) {
+				consolidatedList.add((TimeSlot)timeList.get(j));
+			}
+		}
+		return consolidatedList;
+	}
+	
+	public static List getTimeSlots(List<StudentCourse> studentList, int index) {
+		List<TimeSlot> consolidatedList = new ArrayList();
+		for(int i = 0; i < studentList.size(); i++) {
+			StudentCourse sc = studentList.get(i);
+			if(sc.getCourseIndex()==index) {
 				studentList.remove(sc);
 				return getTimeSlots(studentList);
 			}
@@ -450,5 +508,4 @@ public class StudentCourse implements Serializable {
 	public static void save(List list) {
 		FileIO.writeToFile("studentRecords.dat", list);
 	}
-
 }

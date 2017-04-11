@@ -4,31 +4,20 @@ import java.util.regex.Pattern;
 import java.time.*;
 public class STARSApp 
 {
-
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		String type = "", user = "", pw = "";
 		int choice = 0;
 		User userSession;
 		boolean login = false;
-		ArrayList<String> uList = new ArrayList<String>();
-		String str = "abdced";
-		uList.add("123456;" + str.hashCode() + ";Admin");
-		uList.add("aaa074;" + "123456".hashCode() + ";Student");
-		uList.add("bbb123;" + "654321".hashCode() + ";Student");
-		uList.add("ccc123;" + "123456".hashCode() + ";Student");
-		uList.add("ddd123;" + "654321".hashCode() + ";Student");
-		uList.add("eee123;" + "123456".hashCode() + ";Student");
-		uList.add("fff123;" + "654321".hashCode() + ";Student");
-		uList.add("ggg123;" + "123456".hashCode() + ";Student");
-		uList.add("hhh123;" + "654321".hashCode() + ";Student");
-		uList.add("iii123;" + "123456".hashCode() + ";Student");
-		//InitFiles.init();
+		//Console console;
+		InitFiles.init();
+		
 		System.out.println("Welcome~\nPlease Login");
+		
 		while (login == false) {
 			while (choice != 1 && choice != 2) {
-				System.out
-						.println("Please key in user domain: \n1)Student\n2)Admin");
+				System.out.println("Please key in user domain: \n1)Student\n2)Admin");
 				choice = input.nextInt();
 			}
 			if (choice == 1)
@@ -46,7 +35,7 @@ public class STARSApp
 			 */
 			pw = input.next();
 
-			login = checkLogin(uList, user, pw, type);
+			login = checkLogin(user, pw, type);
 			choice = -1;
 		}
 		userSession = createUser(user, type);
@@ -56,17 +45,15 @@ public class STARSApp
 		}
 	}
 
-	public static boolean checkLogin(ArrayList<String> uList, String user,
-			String pw, String type) {
-		for (int i = 0; i < uList.size(); i++) {
-			String[] s = uList.get(i).split(";");
-			if (s[0].equals(user)) {
-				if (s[1].equals(Integer.toString(pw.hashCode()))) {
-					if (s[2].equals(type)) {
+	public static boolean checkLogin(String user, String pw, String type) {
+		List userList = User.getUserList(); 
+		PasswordHash pwHash = new PasswordHash();
+		for (int i = 0; i < userList.size(); i++) {
+			User u = (User)userList.get(i);
+			if (u.getUsername().equals(user))
+				if (u.getPassword().equals(pwHash.hash(pw,user)))
+					if (u.getType().equals(type))
 						return true;
-					}
-				}
-			}
 		}
 		System.out.println("Login failed. Please try again.");
 		return false;
@@ -74,22 +61,21 @@ public class STARSApp
 
 	public static User createUser(String username, String type) {
 		User u = null;
-		if (type.equals("Student"))
+		List userList = User.getUserList();
+		for(int i = 0; i <userList.size();i++)
 		{
-			Student s;
-			List studList = Student.getStudentList();
-			for(int i=0; i<studList.size();i++)
-			{
-				s = (Student)studList.get(i);
-				if(s.getUsername().equals(username))
+			User user = (User)userList.get(i);
+			if(user.getUsername().equals(username) && user.getType().equals(type)) {
+				if(type.equals("Student"))
 				{
+					Student s = (Student)user;
 					if(s.checkAccessPeriod())
-						u = s;
+						return user;
 				}
+				else
+					return user;
 			}
 		}
-		else
-			u = new Admin(username);
 		return u;
 	}
 }
