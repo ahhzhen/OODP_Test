@@ -203,7 +203,7 @@ public class StudentCourse implements Serializable {
 			if (removeStudentCourseEntry(matricNumber, courseCode, courseIndex)) // statement is true when entry has been removed from list
 				System.out.println("Course " + courseCode + "," + courseIndex + " has been dropped.");
 			else
-				System.out.println("Something went wrong ):");
+				System.out.println("Invalid course code/course index.");
 		}
 	}
 
