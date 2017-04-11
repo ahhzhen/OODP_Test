@@ -234,14 +234,11 @@ public class StudentCourse implements Serializable {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter course code: ");
 		courseCode = input.nextLine();
-		System.out.print("Enter course index: ");
-		courseIndex = input.nextInt();
 		
 		if(Course.courseExist(courseCode))
 		{
 			Course c = Course.getCourse(courseCode);
-			if(c.indexExist(courseIndex))
-				System.out.println("Vacancy for index " + courseIndex + ": " + c.retrieveVacancy(courseIndex));
+			c.checkVacancy();
 		}
 	}
 	

@@ -104,7 +104,8 @@ public class Admin extends User implements Serializable {
 		matricNo = input.next();
 		if(Student.checkStudentExist(matricNo, userid)) {
 			System.out.print("Enter name of student: ");
-			name = input.next();
+			input.nextLine();
+			name = input.nextLine();
 			System.out.print("Enter nationality of student: ");
 			nationality = input.next();
 			System.out.print("Enter gender of student: ");
@@ -133,28 +134,29 @@ public class Admin extends User implements Serializable {
 		}
 	}
 	
-	public void addCourse() {
+	public String checkCourse()
+	{
 		Scanner input = new Scanner(System.in);
-		Course course = new Course();
 		System.out.print("Enter Course Code: ");
 		String coursecode = input.nextLine();
-		if (!courseExist(coursecode)) {
-			System.out.print("Course Name: ");
-			String coursename = input.nextLine();
-			System.out.print("School: ");
-			String school = input.nextLine();
-			course.addCourse(coursename, coursecode, school);
-		} else {
+		if (!Course.courseExist(coursecode))
+			return coursecode;
+		else return "";
+	}
+	
+	public void addCourse() {
+		String coursecode = checkCourse();
+		if(coursecode!="") {
+			Course.addCourse(coursecode);
+		}else {
 			System.out.println("Course Code exist!");
 		}
 	}
 	
 	public void updateCourse() {
 		Scanner input = new Scanner(System.in);
-		Course course = new Course();
-		System.out.println("Enter Course Code: ");
-		String coursecode = input.nextLine();
-		if (courseExist(coursecode)) {
+		String coursecode = checkCourse();
+		if(coursecode!="") {
 			try {
 				Course c = Course.getCourse(coursecode);
 						
@@ -214,45 +216,39 @@ public class Admin extends User implements Serializable {
 				default:
 					System.out.println("Invalid Input");
 				}
-			} catch (Exception e) {}
+			} catch (InputMismatchException e) {}
+			catch (Exception e) {}
 		} else
 			System.out.println("Course Code does not exist!");
 	}
 	
 	public void checkVacancies() {
-		Scanner input = new Scanner(System.in);
-		System.out.print("Enter course code: ");
-		String cCode = input.next();
-		System.out.print("Enter course index: ");
-		int cIndex = input.nextInt();
-		if(Course.courseExist(cCode)) {
-			Course c = Course.getCourse(cCode);
-			if(c.indexExist(cIndex))
-				System.out.println("Vacancy for " + cIndex + " = " + c.retrieveVacancy(cIndex) + "/" + c.retrieveTotalVacancy(cIndex));
+		String coursecode = checkCourse();
+		if(coursecode!="") {
+			Course c = Course.getCourse(coursecode);
+			c.checkVacancy();
+		}else {
+			System.out.println("Course Code does not exist!");
 		}
 	}
 	
 	public void printStudentListByIndex(){
-		Scanner input = new Scanner(System.in);
-		System.out.print("Enter course code: ");
-		String cCode = input.next();
-		System.out.print("Enter course index: ");
-		int cIndex = input.nextInt();
-		if(Course.courseExist(cCode)) {
-			Course c = Course.getCourse(cCode);
-			if(c.indexExist(cIndex)) {
-				c.printStudents(cIndex);
-			}
+		String coursecode = checkCourse();
+		if(coursecode!="") {
+			Course c = Course.getCourse(coursecode);
+			c.printStudents();
+		}else {
+			System.out.println("Course Code does not exist!");
 		}
 	}
 
 	public void printStudentListByCourse() {
-		Scanner input = new Scanner(System.in);
-		System.out.print("Enter course code: ");
-		String course = input.next();
-		if(Course.courseExist(course)) {
-			Course c = Course.getCourse(course);
+		String coursecode = checkCourse();
+		if(coursecode!="") {
+			Course c = Course.getCourse(coursecode);
 			c.printStudents();
+		}else {
+			System.out.println("Course Code does not exist!");
 		}
 	}
 	

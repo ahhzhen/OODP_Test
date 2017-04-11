@@ -190,6 +190,7 @@ public class Student extends User implements Serializable {
 		save(list);
 		User u = (User) this;
 		u.addNewUserToFile();
+		System.out.println("Student " + name + " successfully registered!");
 	}
 
 	public void addCourse() {

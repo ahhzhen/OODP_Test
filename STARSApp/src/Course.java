@@ -109,6 +109,17 @@ public class Course implements Serializable {
 		return this;
 	}
 
+	public void checkVacancy()
+	{
+		Scanner input = new Scanner(System.in);
+		System.out.print("Enter course index: ");
+		int cIndex = input.nextInt();
+		if(indexExist(cIndex))
+			System.out.println("Vacancy for " + cIndex + " = " + retrieveVacancy(cIndex) + "/" + retrieveTotalVacancy(cIndex));
+		else
+			System.out.println("Index does not exist.");
+	}
+	
 	public int retrieveVacancy(int index) {
 		if (selectIndex(index))
 			return cIndexList.get(indexPointer).getVacancy();
@@ -172,9 +183,14 @@ public class Course implements Serializable {
 		return c;
 	}
 	
-	public void addCourse(String coursename, String cCode, String school) {
-		List list = getCourseList();
+	public static void addCourse(String coursecode) {
 		Scanner input = new Scanner(System.in);
+		Course course = new Course();
+		System.out.print("Course Name: ");
+		String coursename = input.nextLine();
+		System.out.print("School: ");
+		String school = input.nextLine();
+		List list = getCourseList();
 		try {
 			int choice = 0, addLect =0;
 			ArrayList<TimeSlot> lectList = new ArrayList();
@@ -185,21 +201,20 @@ public class Course implements Serializable {
 				if(addLect == 1)
 					lectList.add(createTimeSlot("lecture"));
 			}
-			Course course = new Course(coursename, cCode, school, lectList);
+			Course course1 = new Course(coursename, coursecode, school, lectList);
 			while(choice != 2) {
 				System.out.print("Do you wish to add index to the course? 1-Yes 2-No");
 				choice = input.nextInt();
 				switch(choice) {
 				case 1:
-					course.addNewIndex();
+					course1.addNewIndex();
 					break;
 				case 2:
 					break;
 				default:
-				}
-				
+				}		
 			}
-			list.add(course);
+			list.add(course1);
 			save(list);
 			System.out.println("Course added successfully!");
 		} catch (Exception e) {
@@ -228,7 +243,7 @@ public class Course implements Serializable {
 		}
 	}
 	
-	public TimeSlot createTimeSlot(String classType)
+	public static TimeSlot createTimeSlot(String classType)
 	{
 		Scanner input = new Scanner(System.in);
 		TimeSlot ts = null;
@@ -373,9 +388,14 @@ public class Course implements Serializable {
 		StudentCourse.printStudents(courseCode);
 	}
 	
-	public void printStudents(int courseIndex)
+	public void printStudentsByIndex(int courseIndex)
 	{
-		StudentCourse.printStudents(courseIndex);
+		Scanner input = new Scanner(System.in);
+		System.out.print("Enter course index: ");
+		int cIndex = input.nextInt();
+		if(indexExist(cIndex)) {
+			StudentCourse.printStudents(courseIndex);
+		}
 	}
 
 	public static List getCourseList() {
