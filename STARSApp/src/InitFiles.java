@@ -9,9 +9,9 @@ public class InitFiles {
 		PasswordHash pwHash = new PasswordHash();
 		
 		List studList = new ArrayList();
-		Student StudentA = new Student("aaa074", pwHash.hash("123456","aaa074"), "U1620736G", "Student1", 'F', "Singaporean");
-		Student StudentB = new Student("bbb123", pwHash.hash("654321","bbb123"), "U1622603D", "Student2", 'F', "Singaporean");
-		Student StudentC = new Student("ccc123", pwHash.hash("123456","ccc123"), "U1621531K", "Student3", 'F', "Singaporean");
+		Student StudentA = new Student("jchek001", pwHash.hash("123456","jchek001"), "U1620736G", "Jeanelle", 'F', "Singaporean");
+		Student StudentB = new Student("zchen035", pwHash.hash("123456","zchen035"), "U1622603D", "Zhenni", 'F', "Singaporean");
+		Student StudentC = new Student("fly0001", pwHash.hash("123456","fly0001"), "U1621531K", "Li Yan", 'F', "Singaporean");
 		Student StudentD = new Student("ddd123", pwHash.hash("654321","ddd123"), "U1622123D", "Student4", 'F', "Malaysian");
 		Student StudentE = new Student("eee123", pwHash.hash("123456","eee123"), "U1622124E", "Student5", 'M', "Singaporean");
 		Student StudentF = new Student("fff123", pwHash.hash("654321","fff123"), "U1622125F", "Student6", 'F', "Singaporean");
@@ -31,7 +31,7 @@ public class InitFiles {
 		
 		
 		List userList = new ArrayList();
-		User u1 = new Admin("123456", pwHash.hash("abdced","123456"));
+		User u1 = new Admin("starsadmin", pwHash.hash("starsadmin","starsadmin"));
 		User u2 = StudentA;
 		User u3 = StudentB;
 		User u4 = StudentC;
@@ -96,13 +96,13 @@ public class InitFiles {
 		
 		ts1 = new TimeSlot(DayOfWeek.WEDNESDAY,LocalTime.parse("11:30"),LocalTime.parse("12:30"), "TR+8");
 		ts2 = new TimeSlot(DayOfWeek.THURSDAY,LocalTime.parse("10:30"),LocalTime.parse("12:30"), "SWLAB2");
-		ts9 = new TimeSlot(DayOfWeek.TUESDAY, LocalTime.parse("14:30"),LocalTime.parse("15:30"), "LT8");
-		ts10= new TimeSlot(DayOfWeek.THURSDAY, LocalTime.parse("08:30"),LocalTime.parse("09:30"), "LT8");
+		ts9 = new TimeSlot(DayOfWeek.TUESDAY, LocalTime.parse("14:30"),LocalTime.parse("15:30"), "LT2A");
+		ts10= new TimeSlot(DayOfWeek.THURSDAY, LocalTime.parse("08:30"),LocalTime.parse("09:30"), "LT2A");
 		ArrayList lectList3 = new ArrayList();
 		lectList3.add(ts9);
 		lectList3.add(ts10);
 		Course c3 = new Course("Object Oriented Design and Programming", "CZ2002", "School of Computer Science and Engineering", lectList3);
-		c3.AddtocIndexList(10251, 2, 2, "FSP1", ts1, ts2);
+		c3.AddtocIndexList(10221, 2, 2, "FSP1", ts1, ts2);
 		
 		courseList.add(c1);
 		courseList.add(c2);

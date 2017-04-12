@@ -4,20 +4,37 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+/**
+ * Admin class
+ * @version 1.0
+ * @since 13/04/2017
+ */
 public class Admin extends User implements Serializable {
+<<<<<<< HEAD
 	
 	/**
 	 * Constructor for admin class. It initalises username and password by calling the
 	 * super class. 
 	 * @param  u  the username of admin.
 	 * @param  pw the password of admin.
+=======
+	/**
+	 * Class constructor Admin
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 	 */
 	Admin(String u, String pw) {
 		super(u, pw, "Admin");
 	}
+<<<<<<< HEAD
 	/**
 	 * Display a menu which the admin user can select actions to
 	 * perform.
+=======
+
+	/**
+	 * This method is to start the session
+	 * User can choose from the menu to access different functions
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 	 */
 	public void startSession() {
 		int choice = -1;
@@ -60,8 +77,12 @@ public class Admin extends User implements Serializable {
 		}
 	}
 	/**
+<<<<<<< HEAD
 	 * This method always returns display the available options
 	 * that the admin can choose from.
+=======
+	 * This method is to display the following menu
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 	 */
 	public void displayMenu() {
 		System.out.println("");
@@ -75,16 +96,20 @@ public class Admin extends User implements Serializable {
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Edit the access period of the student based on input
 	 * provided by the user. It sets and amend the period
 	 * of time that a student can access the program.
+=======
+	 * This method is to edit student access period
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 	 */
 	public void editStudentAccessPeriod() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter matriculation number of student: ");
 		String mNo = input.next();
 		Student stud = Student.getStudentByMatric(mNo);
-		if(stud != null) {
+		if (stud != null) {
 			System.out.println("Acess period of " + stud.getMatricNo() + ":");
 			System.out.println(stud.printStartDate() + " - " + stud.printEndDate());
 			System.out.print("Enter new access period start date for student(DD/MM/YYYY): ");
@@ -101,27 +126,27 @@ public class Admin extends User implements Serializable {
 			try {
 				Date newStartDate = d.parse(newStartGiven);
 				Date newEndDate = d.parse(newEndGiven);
-				if(newStartDate.before(newEndDate)) {
+				if (newStartDate.before(newEndDate)) {
 					stud.setStartDate(newStartDate);
 					stud.setEndDate(newEndDate);
 					System.out.println("Access time successfully changed.");
-				}
-				else
+				} else
 					System.out.println("Start daytime must be before end daytime.");
 			} catch (ParseException e) {
 				System.out.println("Wrong date/time format is entered!");
-				//e.printStackTrace();
+				// e.printStackTrace();
 			}
-		}
-		else
+		} else
 			System.out.println("Student does not exist.");
 	}
 	/**
 	 * This method adds a student based on the input given.
 	 */
 	
-	public void addStudent()
-	{
+	/**
+	 * This method is to add student
+	 */
+	public void addStudent() {
 		PasswordHash pwHash = new PasswordHash();
 		char gender;
 		String userid, matricNo, password, name, nationality;
@@ -133,7 +158,7 @@ public class Admin extends User implements Serializable {
 		matricNo = input.next();
 		System.out.print("Enter login password for student: ");
 		password = pwHash.hash(input.next(), userid);
-		if(Student.checkStudentExist(matricNo, userid)) {
+		if (Student.checkStudentExist(matricNo, userid)) {
 			System.out.print("Enter name of student: ");
 			input.nextLine();
 			name = input.nextLine();
@@ -143,14 +168,20 @@ public class Admin extends User implements Serializable {
 			gender = input.next().charAt(0);
 			Student stud = new Student(userid, password, matricNo, name, gender, nationality);
 			stud.addNewStudentToFile();
-		}
-		else
+		} else
 			System.out.println("Student already exist!");
 	}
+<<<<<<< HEAD
 	/**
 	 * This methods is able to add a new course or update a course
 	 * based on the option chosen by the user and the valid input given
 	 * by the user.
+=======
+
+	/**
+	 * This method is to modify course
+	 * User can choose to add course or update course
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 	 */
 	public void modifyCourse() {
 		Scanner input = new Scanner(System.in);
@@ -159,7 +190,7 @@ public class Admin extends User implements Serializable {
 		System.out.print("Choice: ");
 		int choice = input.nextInt();
 		switch (choice) {
-		case 1	:
+		case 1:
 			addCourse();
 			break;
 		case 2:
@@ -170,6 +201,7 @@ public class Admin extends User implements Serializable {
 		}
 	}
 	/**
+<<<<<<< HEAD
 	 * This method will always return a course code if the course code given is valid.
 	 * Otherwise, it will return a "". 
 	 * @return      course code, if it exist.
@@ -177,28 +209,42 @@ public class Admin extends User implements Serializable {
 	 */
 	public String checkCourse()
 	{
+=======
+	 * This method is to check if course exist
+	 * @return courseCode if course code is found. 
+	 * @return null if course code is null
+	 */
+	public String checkCourse() {
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter Course Code: ");
 		String coursecode = input.nextLine().toUpperCase();
 		if (Course.courseExist(coursecode))
 			return coursecode;
-		else return "";
+		else
+			return "";
 	}
 	/**
 	 * This method adds a new course based on the input provided
 	 * by the user.
 	 */
 	
+	/**
+	 * This method is to add course
+	 * Prints if course exist
+	 * 
+	 */
 	public void addCourse() {
 		System.out.println("---------------Add Course---------------");
 		String coursecode = checkCourse();
-		if(coursecode=="") {
+		if (coursecode == "") {
 			Course.addCourse(coursecode);
-		}else {
+		} else {
 			System.out.println("Course Code exist!");
 		}
 	}
 	/**
+<<<<<<< HEAD
 	 * updateCoourse uses checkCourse to prompt the user to enter the course code.
 	 * Upon receiving a valid course code, updateCourse will prompt the user to either edit:
 	 * 1. Course name : prompts for new course name and then calls the editCourseName method 
@@ -209,14 +255,18 @@ public class Admin extends User implements Serializable {
 	 * 4. Course vacancy : prompts user to input the index for which the vacancy will be changed, then the new vacancy. Returns
 	 * an error if the new vacancy is less than the number of students in the course. Also returns an error if there are invalid inputs
 	 * or the course index entered does not exist.
+=======
+	 * This method is to update course
+	 * Admin can access different function
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 	 */
 	public void updateCourse() {
 		Scanner input = new Scanner(System.in);
 		String coursecode = checkCourse();
-		if(coursecode!="") {
+		if (coursecode != "") {
 			try {
 				Course c = Course.getCourse(coursecode);
-						
+
 				System.out.println("1. Edit Course Name");
 				System.out.println("2. Edit School");
 				System.out.println("3. Edit Course Index");
@@ -229,98 +279,111 @@ public class Admin extends User implements Serializable {
 					String nameinput = input.next();
 					if (nameinput == "-1")
 						break;
-					else 
+					else
 						c.editCourseName(nameinput);
 					break;
 				case 2:
 					System.out.println("Current School is : " + c.getSchool());
 					System.out.print("Enter new School (Enter -1 to cancel) :");
 					String schoolinput = input.next();
-					if (schoolinput == "-1") 
+					if (schoolinput == "-1")
 						break;
 					else
 						c.editSchool(schoolinput);
 					break;
 				case 3:
 					c.printIndexes();
-					try{
+					try {
 						System.out.print("Enter Index to change: ");
 						int oldIndex = input.nextInt();
 						System.out.print("Enter new index for " + oldIndex + " (Enter -1 to cancel) : ");
 						int newIndex = input.nextInt();
-						if(newIndex != -1) {
-							if(c.indexExist(oldIndex) && !c.indexExist(newIndex))
+						if (newIndex != -1) {
+							if (c.indexExist(oldIndex) && !c.indexExist(newIndex))
 								c.editIndex(oldIndex, newIndex);
 							else
 								System.out.println("Error occured. Invalid course index entered");
 						}
-					}
-					catch(InputMismatchException e) {
+					} catch (InputMismatchException e) {
 						System.out.println("Error occured. Invalid course index entered");
 					}
 					break;
 				case 4:
 					c.printIndexes();
-					try{
+					try {
 						System.out.print("Enter which index vacancy to change: ");
 						int index = input.nextInt();
-						if(c.indexExist(index)) {
-							System.out.println("Current total vacancy: " + c.retrieveTotalVacancy(index) + " (Current number of registered students: " + c.retrieveVacancy(index) +")");
+						if (c.indexExist(index)) {
+							System.out.println("Current total vacancy: " + c.retrieveTotalVacancy(index)
+									+ " (Current number of registered students: " + c.retrieveVacancy(index) + ")");
 							System.out.print("Enter new vacancy (Enter -1 to cancel): ");
 							int newVacancy = input.nextInt();
-							if(newVacancy != -1) {
-								if(newVacancy >= c.retrieveVacancy(index)) {
+							if (newVacancy != -1) {
+								if (newVacancy >= c.retrieveVacancy(index)) {
 									c.updateVacancy(index, newVacancy);
 									System.out.println("Vacancy successfully updated");
-								}
-								else
+								} else
 									System.out.println("Invalid vacancy entered!");
-							}
-							else
-								System.out.println("New vacancy cannot be lesser than current number of registered students.");
-						}
-						else 
+							} else
+								System.out.println(
+										"New vacancy cannot be lesser than current number of registered students.");
+						} else
 							System.out.println("Course index does not exist");
-					}
-					catch (InputMismatchException e) {
+					} catch (InputMismatchException e) {
 						System.out.println("Error occured. Please key in numeric values");
 					}
 					break;
 				default:
 					System.out.println("Invalid Input");
 				}
-			} catch (InputMismatchException e) {System.out.println("Invalid input"); input.next();}
-			catch (Exception e) {}
+			} catch (InputMismatchException e) {
+				System.out.println("Invalid input");
+				input.next();
+			} catch (Exception e) {
+			}
 		} else
 			System.out.println("Course Code does not exist!");
 	}
+<<<<<<< HEAD
 	/**
 	 * checkVacancies checks for the number of empty slots available 
 	 * for a given course and index. The course index is prompted by the Course class.
 	 * An error message is printed when there are no/invalid inputs.
+=======
+
+	/**
+	 * This method is to check vacancies
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 	 */
 	public void checkVacancies() {
 		String coursecode = checkCourse();
-		if(coursecode!="") {
+		if (coursecode != "") {
 			Course c = Course.getCourse(coursecode);
 			c.checkVacancy();
-		}else {
+		} else {
 			System.out.println("Course Code does not exist!");
 		}
 	}
 	/**
+<<<<<<< HEAD
 	 * printStudentListByIndex prompts the user to input the course code and course index, then calls 
 	 * printStudentsByIndex in Course in order to print the students based on index.
 	 * Generates an error message for invalid/empty inputs.
 	 */
 	public void printStudentListByIndex(){
+=======
+	 * This method is to print student list in order of index
+	 */
+	public void printStudentListByIndex() {
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 		String coursecode = checkCourse();
 		Scanner input = new Scanner(System.in);
-		if(coursecode!="") {
+		if (coursecode != "") {
 			Course c = Course.getCourse(coursecode);
 			System.out.print("Enter course index: ");
 			int courseIndex = input.nextInt();
 			c.printStudentsByIndex(courseIndex);
+<<<<<<< HEAD
 		}else {
 			System.out.println("Course Code does not exist!");
 		}
@@ -336,11 +399,32 @@ public class Admin extends User implements Serializable {
 			Course c = Course.getCourse(coursecode);
 			c.printStudents();
 		}else {
+=======
+		} else {
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
+			System.out.println("Course Code does not exist!");
+		}
+	}
+<<<<<<< HEAD
+	/**
+	 * The user chose to quit the program. The method will print a line indicating that the user has quit the program.
+=======
+	
+	/**
+	 * This method is to print student list in order of course
+	 */
+	public void printStudentListByCourse() {
+		String coursecode = checkCourse();
+		if (coursecode != "") {
+			Course c = Course.getCourse(coursecode);
+			c.printStudents();
+		} else {
 			System.out.println("Course Code does not exist!");
 		}
 	}
 	/**
-	 * The user chose to quit the program. The method will print a line indicating that the user has quit the program.
+	 * This method is to quit the function
+>>>>>>> branch 'ZhenniFinalDev' of https://github.com/ahhzhen/OODP_Test
 	 */
 	public void quit() {
 		System.out.println("Thank you for using STARSApp");
