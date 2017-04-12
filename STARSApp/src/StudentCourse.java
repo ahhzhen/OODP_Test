@@ -336,7 +336,7 @@ public class StudentCourse implements Serializable {
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Enter course code:");
-		courseCode = input.nextLine();
+		courseCode = input.nextLine().toUpperCase();
 		System.out.println("Enter index:");
 		oldIndex = input.nextInt();
 

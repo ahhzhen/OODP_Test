@@ -69,13 +69,13 @@ public class Admin extends User implements Serializable {
 		if(stud != null) {
 			System.out.println("Acess period of " + stud.getMatricNo() + ":");
 			System.out.println(stud.printStartDate() + " - " + stud.printEndDate());
-			System.out.print("Enter new access period date for student(DD/MM/YYYY): ");
+			System.out.print("Enter new access period start date for student(DD/MM/YYYY): ");
 			String startDate = input.next();
-			System.out.println("Enter start time of the access period(HH:MM): ");
+			System.out.print("Enter start time of the access period(HH:MM): ");
 			String startTime = input.next();
-			System.out.print("Enter new access period date for student(DD/MM/YYYY): ");
+			System.out.print("Enter new access period end date for student(DD/MM/YYYY): ");
 			String endDate = input.next();
-			System.out.println("Enter start time of the access period(HH:MM): ");
+			System.out.print("Enter start time of the access period(HH:MM): ");
 			String endTime = input.next();
 			String newStartGiven = startDate + " " + startTime;
 			String newEndGiven = endDate + " " + endTime;
@@ -95,6 +95,8 @@ public class Admin extends User implements Serializable {
 				//e.printStackTrace();
 			}
 		}
+		else
+			System.out.println("Student does not exist.");
 	}
 	
 	public void addStudent()
@@ -129,6 +131,7 @@ public class Admin extends User implements Serializable {
 		Scanner input = new Scanner(System.in);
 		System.out.println("1. Add Course");
 		System.out.println("2. Update Course");
+		System.out.print("Choice: ");
 		int choice = input.nextInt();
 		switch (choice) {
 		case 1	:
@@ -182,7 +185,7 @@ public class Admin extends User implements Serializable {
 					if (nameinput == "-1")
 						break;
 					else 
-						c.editCourseName(nameinput, c.getCourseCode());
+						c.editCourseName(nameinput);
 					break;
 				case 2:
 					System.out.println("Current School is : " + c.getSchool());
@@ -191,41 +194,57 @@ public class Admin extends User implements Serializable {
 					if (schoolinput == "-1") 
 						break;
 					else
-						c.editSchool(c.getCourseCode(), schoolinput);
+						c.editSchool(schoolinput);
 					break;
 				case 3:
 					c.printIndexes();
-					System.out.print("Enter Index to change: ");
-					int oldIndex = input.nextInt();
-					System.out.print("Enter new index for " + oldIndex + " (Enter -1 to cancel) : ");
-					int newIndex = input.nextInt();
-					if(newIndex != -1) {
-						if(c.indexExist(oldIndex) && !c.indexExist(newIndex))
-							c.editIndex(oldIndex, newIndex);
+					try{
+						System.out.print("Enter Index to change: ");
+						int oldIndex = input.nextInt();
+						System.out.print("Enter new index for " + oldIndex + " (Enter -1 to cancel) : ");
+						int newIndex = input.nextInt();
+						if(newIndex != -1) {
+							if(c.indexExist(oldIndex) && !c.indexExist(newIndex))
+								c.editIndex(oldIndex, newIndex);
+							else
+								System.out.println("Error occured. Invalid course index entered");
+						}
+					}
+					catch(InputMismatchException e) {
+						System.out.println("Error occured. Invalid course index entered");
 					}
 					break;
 				case 4:
 					c.printIndexes();
-					System.out.print("Enter which index vacancy to change: ");
-					int index = input.nextInt();
-					if(c.indexExist(index)) {
-						System.out.print("Current total vacancy: " + c.retrieveTotalVacancy(index) + " (Current number of registered students: " + c.retrieveVacancy(index) +")");
-						System.out.print("Enter new vacancy: (Enter -1 to cancel)");
-						int newVacancy = input.nextInt();
-						if(newVacancy != -1) {
-							if(newVacancy >= c.retrieveVacancy(index)) {
-								c.updateVacancy(index, newVacancy);
-								System.out.println("Vacancy successfully updated");
+					try{
+						System.out.print("Enter which index vacancy to change: ");
+						int index = input.nextInt();
+						if(c.indexExist(index)) {
+							System.out.println("Current total vacancy: " + c.retrieveTotalVacancy(index) + " (Current number of registered students: " + c.retrieveVacancy(index) +")");
+							System.out.print("Enter new vacancy (Enter -1 to cancel): ");
+							int newVacancy = input.nextInt();
+							if(newVacancy != -1) {
+								if(newVacancy >= c.retrieveVacancy(index)) {
+									c.updateVacancy(index, newVacancy);
+									System.out.println("Vacancy successfully updated");
+								}
+								else
+									System.out.println("Invalid vacancy entered!");
 							}
 							else
-								System.out.println("Invalid vacancy entered!");
+								System.out.println("New vacancy cannot be lesser than current number of registered students.");
 						}
+						else 
+							System.out.println("Course index does not exist");
+					}
+					catch (InputMismatchException e) {
+						System.out.println("Error occured. Please key in numeric values");
 					}
 					break;
 				default:
 					System.out.println("Invalid Input");
 				}
-			} catch (InputMismatchException e) {}
+			} catch (InputMismatchException e) {System.out.println("Invalid input"); input.next();}
 			catch (Exception e) {}
 		} else
 			System.out.println("Course Code does not exist!");

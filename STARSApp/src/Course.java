@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.regex.Pattern;
 import java.io.*;
 public class Course implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -7,8 +8,6 @@ public class Course implements Serializable {
 	private String school;
 	private int indexPointer;
 	private ArrayList<CourseIndex> cIndexList;
-	// private static ArrayList<Course> courseList; //StudentCourse will hold
-	// the courseList
 	private ArrayList<TimeSlot> lectureList;
 
 	public Course() {
@@ -194,29 +193,38 @@ public class Course implements Serializable {
 		try {
 			int choice = 0, addLect =0;
 			ArrayList<TimeSlot> lectList = new ArrayList();
-			lectList.add(createTimeSlot("lecture"));
-			while(addLect != 2) {
-				System.out.println("Do you wish to add more lecture sessions to the course? 1-Yes 2-No");
-				addLect = input.nextInt();
-				if(addLect == 1)
-					lectList.add(createTimeSlot("lecture"));
+			TimeSlot lect = createTimeSlot("lecture");
+			if(lect != null) {
+				lectList.add(lect);
+				while(addLect != 2) {
+					System.out.println("Do you wish to add more lecture sessions to the course? 1-Yes 2-No");
+					addLect = input.nextInt();
+					if(addLect == 1)
+					{
+						lect = createTimeSlot("lecture");
+						if(lect!= null)
+							lectList.add(lect);
+						else break;
+					}
+				}
+				Course course1 = new Course(coursename, coursecode, school, lectList);
+				while(choice != 2) {
+					System.out.print("Do you wish to add index to the course? 1-Yes 2-No");
+					choice = input.nextInt();
+					switch(choice) {
+					case 1:
+						course1.addNewIndex();
+						break;
+					case 2:
+						break;
+					default:
+					}		
+				}
+				list.add(course1);
+				save(list);
+				System.out.println("Course added successfully!");
 			}
-			Course course1 = new Course(coursename, coursecode, school, lectList);
-			while(choice != 2) {
-				System.out.print("Do you wish to add index to the course? 1-Yes 2-No");
-				choice = input.nextInt();
-				switch(choice) {
-				case 1:
-					course1.addNewIndex();
-					break;
-				case 2:
-					break;
-				default:
-				}		
-			}
-			list.add(course1);
-			save(list);
-			System.out.println("Course added successfully!");
+	
 		} catch (Exception e) {
 			System.out.println("Error occured. Course is not added.");
 		}
@@ -234,11 +242,18 @@ public class Course implements Serializable {
 			System.out.print("Enter number of vacancies: ");
 			int vacancy = input.nextInt();
 			System.out.print("Do you wish to add lab? 1-Yes 2-No");
-			if(input.nextInt() == 1)
+			if(input.nextInt() == 1) {
 				lab = createTimeSlot("lab");
+				if(lab== null) 
+					System.out.println("");
+					return;
+			}
 			System.out.print("Do you wish to add tutorial? 1-Yes 2-No");
-			if(input.nextInt() == 1)
-				lab = createTimeSlot("tutorial");
+			if(input.nextInt() == 1) {
+				tut = createTimeSlot("tutorial");
+				if(tut == null) 
+					return;
+			}
 			AddtocIndexList(indexNo, vacancy, vacancy, groupName, tut, lab);
 		}
 	}
@@ -250,51 +265,48 @@ public class Course implements Serializable {
 		try {
 			System.out.print("Enter day for " + classType + " (1-Monday 5-Friday): ");
 			int day = input.nextInt();
-			System.out.print("Enter start time for " + classType + " (HH:MM): ");
-			String start = input.next();
-			System.out.print("Enter end time for " + classType + " (HH:MM): ");
-			String end = input.next();
-			System.out.print("Enter venue for "+ classType +": ");
-			String venue = input.next();
-			ts = new TimeSlot(day, start, end, venue);
+			if(day > 0 && day < 6)
+			{
+				Pattern p = Pattern.compile("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+				System.out.print("Enter start time for " + classType + " (HH:MM): ");
+				String start = input.next();
+				System.out.print("Enter end time for " + classType + " (HH:MM): ");
+				String end = input.next();
+				if((p.matcher(start)).matches() && (p.matcher(end)).matches())
+				{
+					System.out.print("Enter venue for "+ classType +": ");
+					String venue = input.next();
+					ts = new TimeSlot(day, start, end, venue);
+				}
+				else
+					System.out.println("Error occured. Wrong time format found.");
+			}
+			else
+				System.out.println("Invalid input found. Only input 1-5.");
 			return ts;
 		}
-		catch(Exception e){return ts;}
+		catch(InputMismatchException e) {
+			System.out.println("Error occured. Please key in numerical value");
+			return ts;
+		}
 	}
 
-	public void editCourseName(String coursename, String courseCode) {
-		List list = getCourseList();
+	public void editCourseName(String coursename) {
 		try {
-			if (list.size() != 0) {
-				for (int i = 0; i < list.size(); i++) {
-					Course course = (Course) list.get(i);
-					if (course.getCourseCode().toString() == courseCode) {
-						course.setName(coursename);
-						break;
-					}
-				}
-			}
+			setName(coursename);
+			save();
 		} catch (Exception e) {
+			System.out.println("Error occurred. Name of course is not changed");
 		}
-		save(list);
 	}
 
-	public void editSchool(String courseCode, String school) {
-		List list = getCourseList();
-		// List<Course> courseList = new ArrayList<Course>();
+	public void editSchool(String school) {
 		try {
-			if (list.size() != 0) {
-				for (int i = 0; i < list.size(); i++) {
-					Course course = (Course) list.get(i);
-					if (course.getCourseCode().toString() == courseCode) {
-						course.setSchool(school);
-						break;
-					}
-				}
-			}
+			setSchool(school);
+			save();
 		} catch (Exception e) {
+			System.out.println("Error occured. School of course is not changed.");
 		}
-		save(list);
 	}
 	
 	public void editIndex(int oldIndex, int newIndex) {
@@ -308,18 +320,19 @@ public class Course implements Serializable {
 			}
 			save();
 		}
-		catch(Exception e)
-		{}
+		catch(Exception e) {
+			System.out.println("Error occured. ");
+		}
 	}
 
 	public boolean indexExist(int index) {
 		if(cIndexList.size()>0) {
-		for(int i=0; i<cIndexList.size(); i++) {
-			CourseIndex cIndex=(CourseIndex)cIndexList.get(i);
-			if(cIndex.getIndex()==(index))
-				return true;
-		}
-		return false;
+			for(int i=0; i<cIndexList.size(); i++) {
+				CourseIndex cIndex=(CourseIndex)cIndexList.get(i);
+				if(cIndex.getIndex()==(index))
+					return true;
+			}
+			return false;
 		}
 		else return false;
 	}
