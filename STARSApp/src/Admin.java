@@ -146,15 +146,16 @@ public class Admin extends User implements Serializable {
 	{
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter Course Code: ");
-		String coursecode = input.nextLine();
+		String coursecode = input.nextLine().toUpperCase();
 		if (Course.courseExist(coursecode))
 			return coursecode;
 		else return "";
 	}
 	
 	public void addCourse() {
+		System.out.println("---------------Add Course---------------");
 		String coursecode = checkCourse();
-		if(coursecode!="") {
+		if(coursecode=="") {
 			Course.addCourse(coursecode);
 		}else {
 			System.out.println("Course Code exist!");
@@ -242,9 +243,12 @@ public class Admin extends User implements Serializable {
 	
 	public void printStudentListByIndex(){
 		String coursecode = checkCourse();
+		Scanner input = new Scanner(System.in);
 		if(coursecode!="") {
 			Course c = Course.getCourse(coursecode);
-			c.printStudents();
+			System.out.print("Enter course index: ");
+			int courseIndex = input.nextInt();
+			c.printStudentsByIndex(courseIndex);
 		}else {
 			System.out.println("Course Code does not exist!");
 		}

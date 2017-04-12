@@ -390,12 +390,11 @@ public class Course implements Serializable {
 	
 	public void printStudentsByIndex(int courseIndex)
 	{
-		Scanner input = new Scanner(System.in);
-		System.out.print("Enter course index: ");
-		int cIndex = input.nextInt();
-		if(indexExist(cIndex)) {
+		if(indexExist(courseIndex)) {
 			StudentCourse.printStudents(courseIndex);
 		}
+		else
+			System.out.println("Index does not exist.");
 	}
 
 	public static List getCourseList() {

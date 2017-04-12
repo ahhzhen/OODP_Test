@@ -194,10 +194,12 @@ public class Student extends User implements Serializable {
 	}
 
 	public void addCourse() {
-		StudentCourse.registerStudent(matricNo);
+		StudentCourse.registerStudent(matricNo); //need to call static
 	}
 	
 	public void dropCourse() {
+		//get course code and course index
+		//check whether enrolled
 		StudentCourse.unregisterStudent(matricNo);
 	}
 	

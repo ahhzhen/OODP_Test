@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.InputMismatchException;
 
 public class StudentCourse implements Serializable {
 
@@ -83,7 +84,7 @@ public class StudentCourse implements Serializable {
 
 			Scanner input = new Scanner(System.in);
 			System.out.print("Enter the course code: ");
-			String courseCode = input.next();
+			String courseCode = input.next().toUpperCase();
 			if (courseExist(courseCode))// check if course Exist
 			{
 				if (!enrolled(matricNo, courseCode)) 
@@ -124,6 +125,8 @@ public class StudentCourse implements Serializable {
 								System.out.println("You are on the waitlist already");
 						}
 					}
+					else
+						System.out.println("Course index does not exist.");
 				} else
 					System.out.println("Course has been registered previously.");
 			}
@@ -197,7 +200,7 @@ public class StudentCourse implements Serializable {
 
 			Scanner input = new Scanner(System.in);
 			System.out.println("Please enter course code you wish to drop:");
-			courseCode = input.nextLine();
+			courseCode = input.nextLine().toUpperCase();
 			System.out.println("Please enter course index you wish to drop:");
 			courseIndex = input.nextInt();
 			if (removeStudentCourseEntry(matricNumber, courseCode, courseIndex)) // statement is true when entry has been removed from list
@@ -228,36 +231,41 @@ public class StudentCourse implements Serializable {
 		}
 	}
 
-	public static void checkVacancy() {//trycatch
+	public static void checkVacancy() {
 		String courseCode;
 		int courseIndex;
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter course code: ");
-		courseCode = input.nextLine();
+		courseCode = input.nextLine().toUpperCase();
 		
-		if(Course.courseExist(courseCode))
+		if(courseExist(courseCode))
 		{
-			Course c = Course.getCourse(courseCode);
+			Course c = getCourse(courseCode);
 			c.checkVacancy();
 		}
 		else
 			System.out.println("Course code does exist.");
-	}
+	}	
 	
 	public static void changeCourseIndex(String matricNumber) {
 		List registeredCourselist = getCoursesRegistered(matricNumber);
 
-		String courseCode;
-		int newIndex, oldIndex;
+		String courseCode = ""; // initialize
+		int newIndex = -1, oldIndex = -1; // initialize
 		Scanner input = new Scanner(System.in);
 
+		try{
 		System.out.print("Enter course code:");
-		courseCode = input.nextLine();
+		courseCode = input.nextLine().toUpperCase();
 		System.out.print("Enter old course index:");
 		oldIndex = input.nextInt();
 		System.out.print("Enter new course index:");
 		newIndex = input.nextInt();
-
+		}
+		catch (InputMismatchException e)
+		{
+			System.out.print("Invalid course index format entered.");
+		}
 		// check if course and courseIndex exists
 		if(courseExist(courseCode))
 		{
@@ -411,7 +419,7 @@ public class StudentCourse implements Serializable {
 		}
 	}
 	
-	public static void printStudents(int courseIndex) { //errormessage
+	public static void printStudents(int courseIndex) {
 		int found = 0;
 		List list = getRegisteredList();
 		for(int i = 0; i < list.size(); i++)
@@ -430,7 +438,7 @@ public class StudentCourse implements Serializable {
 			System.out.println("No student have registered for the course");
 	}
 
-	public static void printStudents(String courseCode) { //errormessage
+	public static void printStudents(String courseCode) { 
 		int found = 0;
 		List list = getRegisteredList();
 		for(int i = 0; i < list.size(); i++)
