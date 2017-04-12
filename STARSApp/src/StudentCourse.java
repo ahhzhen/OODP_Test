@@ -112,6 +112,8 @@ public class StudentCourse implements Serializable {
 								else
 									System.out.println("Error occured. Course not registered.");
 							}
+							else
+								System.out.println("Course not registered! Index has clash with current timetable.");
 						}
 						else
 						{
@@ -151,8 +153,8 @@ public class StudentCourse implements Serializable {
 		if(addStudentCourseEntry(matricNo, courseCode, courseIndex))
 		{
 			//email student
-			String studentId="ZCHEN035";
-			String mailTo = studentId +"@e.ntu.edu.sg";
+			String studentId="YIUH0002";
+			String mailTo = studentId +"@gmail.com";
 			String password="cz2002oodp";
 			String mailFrom = "oodp2002@gmail.com";
 			String mailSubject = "Course Registered";
