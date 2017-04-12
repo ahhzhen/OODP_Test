@@ -16,10 +16,10 @@ public class StudentCourse implements Serializable {
 	StudentCourse() {
 	}
 
-	StudentCourse(String s, String c, int i) {
-		stud = s;
-		crse = c;
-		indx = i;
+	StudentCourse(String stud, String crse, int indx) {
+		this.stud = stud;
+		this.crse = crse;
+		this.indx = indx;
 	}
 
 	// getter and setters
@@ -154,7 +154,7 @@ public class StudentCourse implements Serializable {
 			String mailFrom = "oodp2002@gmail.com";
 			String mailSubject = "Course Registered";
 			String mailText = "Dear " + matricNo + ",\nYou have been successfully registered to " + courseCode + " - " + courseIndex + ". You may login to STARS to see.";
-			EmailTest.send(mailFrom,password,mailTo,mailSubject,mailText);
+			Email.send(mailFrom,password,mailTo,mailSubject,mailText);
 		}
 		else
 			System.out.println("Error occured, student not registered to course");
@@ -240,6 +240,8 @@ public class StudentCourse implements Serializable {
 			Course c = Course.getCourse(courseCode);
 			c.checkVacancy();
 		}
+		else
+			System.out.println("Course code does exist.");
 	}
 	
 	public static void changeCourseIndex(String matricNumber) {

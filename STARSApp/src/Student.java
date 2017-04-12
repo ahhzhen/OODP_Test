@@ -28,8 +28,7 @@ public class Student extends User implements Serializable {
 		{
 			Student stud = (Student) list.get(i);
 			if(stud.getMatricNo().equals(matricNo)){
-				list.remove(i);
-				list.add(this);
+				list.set(i, this);
 			}
 		}
 		save(list);
@@ -38,24 +37,25 @@ public class Student extends User implements Serializable {
 	public void setInitialDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, 3);
-        cal.set(Calendar.DATE, 11);
+        cal.set(Calendar.DATE, 12);
         cal.set(Calendar.YEAR, 2017);
-        cal.set(Calendar.HOUR_OF_DAY, 11);
+        cal.set(Calendar.HOUR_OF_DAY, 3);
         cal.set(Calendar.MINUTE,00);
         cal.set(Calendar.SECOND,00);
         //cal.set(Calendar.AM_PM, 1);
         this.start = cal.getTime();
         
-        cal.add(Calendar.HOUR_OF_DAY, 10);
+        cal.add(Calendar.HOUR_OF_DAY, 20);
         this.end = cal.getTime();
 	}
 	
 	public void setStartDate(Date newDate) {
 		this.start = newDate;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(newDate);
-		cal.add(Calendar.HOUR_OF_DAY, 1);
-		this.end = cal.getTime();
+		updateStudentToFile();
+	}
+	
+	public void setEndDate(Date newDate) {
+		this.end = newDate;
 		updateStudentToFile();
 	}
 	
@@ -67,18 +67,18 @@ public class Student extends User implements Serializable {
 	
 	public String getNationality(){return nationality;}
 	
-	public Date getStartDate(){return start;}
+	public Date getStart(){return start;}
 	
-	public Date getEndDate(){return end;}
+	public Date getEnd(){return end;}
 	
 	public String printStartDate() {
 		SimpleDateFormat ft = new SimpleDateFormat("E dd/MM/yyyy HH:mm:ss");
-		return ft.format(getStartDate());
+		return ft.format(getStart());
 	}
 	
 	public String printEndDate() {
 		SimpleDateFormat ft = new SimpleDateFormat("E dd/MM/yyyy HH:mm:ss");
-		return ft.format(getEndDate());
+		return ft.format(getEnd());
 	}
 	
 	public void startSession() {
@@ -112,7 +112,7 @@ public class Student extends User implements Serializable {
 				changeIndexNumber();
 				break;
 			case 6:
-				swopIndexNumber();
+				swapIndexNumber();
 				break;
 			case 7:
 				StudentCourse.printTimeTable(matricNo);
@@ -227,7 +227,7 @@ public class Student extends User implements Serializable {
 		StudentCourse.changeCourseIndex(matricNo);
 	}
 
-	public void swopIndexNumber() {
+	public void swapIndexNumber() {
 		StudentCourse.swapCourse(matricNo);
 	}
 

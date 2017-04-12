@@ -61,14 +61,6 @@ public class Admin extends User implements Serializable {
 		System.out.println("7. Quit");
 	}
 	
-	public boolean courseExist(String coursecode) {
-		if (Course.courseExist(coursecode)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	public void editStudentAccessPeriod() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter matriculation number of student: ");
@@ -78,30 +70,46 @@ public class Admin extends User implements Serializable {
 			System.out.println("Acess period of " + stud.getMatricNo() + ":");
 			System.out.println(stud.printStartDate() + " - " + stud.printEndDate());
 			System.out.print("Enter new access period date for student(DD/MM/YYYY): ");
-			String date = input.next();
+			String startDate = input.next();
 			System.out.println("Enter start time of the access period(HH:MM): ");
-			String time = input.next();
-			String newDateGiven = date + " " + time;
+			String startTime = input.next();
+			System.out.print("Enter new access period date for student(DD/MM/YYYY): ");
+			String endDate = input.next();
+			System.out.println("Enter start time of the access period(HH:MM): ");
+			String endTime = input.next();
+			String newStartGiven = startDate + " " + startTime;
+			String newEndGiven = endDate + " " + endTime;
 			DateFormat d = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 			try {
-				Date newDate = d.parse(newDateGiven);
-				stud.setStartDate(newDate);
+				Date newStartDate = d.parse(newStartGiven);
+				Date newEndDate = d.parse(newEndGiven);
+				if(newStartDate.before(newEndDate)) {
+					stud.setStartDate(newStartDate);
+					stud.setEndDate(newEndDate);
+					System.out.println("Access time successfully changed.");
+				}
+				else
+					System.out.println("Start daytime must be before end daytime.");
 			} catch (ParseException e) {
-				e.printStackTrace();
+				System.out.println("Wrong date/time format is entered!");
+				//e.printStackTrace();
 			}
 		}
 	}
 	
 	public void addStudent()
 	{
+		PasswordHash pwHash = new PasswordHash();
 		char gender;
-		String userid, matricNo, name, nationality;
+		String userid, matricNo, password, name, nationality;
 		Scanner input = new Scanner(System.in);
 		System.out.println("--------Add Student--------");
 		System.out.print("Enter user id for student: ");
 		userid = input.next();
 		System.out.print("Enter matriculation number for student: ");
 		matricNo = input.next();
+		System.out.print("Enter login password for student: ");
+		password = pwHash.hash(input.next(), userid);
 		if(Student.checkStudentExist(matricNo, userid)) {
 			System.out.print("Enter name of student: ");
 			input.nextLine();
@@ -110,7 +118,7 @@ public class Admin extends User implements Serializable {
 			nationality = input.next();
 			System.out.print("Enter gender of student: ");
 			gender = input.next().charAt(0);
-			Student stud = new Student(userid, "123456", matricNo, name, gender, nationality);
+			Student stud = new Student(userid, password, matricNo, name, gender, nationality);
 			stud.addNewStudentToFile();
 		}
 		else
@@ -139,7 +147,7 @@ public class Admin extends User implements Serializable {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter Course Code: ");
 		String coursecode = input.nextLine();
-		if (!Course.courseExist(coursecode))
+		if (Course.courseExist(coursecode))
 			return coursecode;
 		else return "";
 	}

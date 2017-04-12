@@ -11,10 +11,10 @@ public abstract class User implements Serializable {
 	
 	User(){}
 	
-	User(String u, String p, String t) {
-		username = u;
-		password = p;
-		type = t;
+	User(String username, String password, String type) {
+		this.username = username;
+		this.password = password;
+		this.type = type;
 	}
 	
 	public String getUsername() {
@@ -66,5 +66,5 @@ public abstract class User implements Serializable {
 		saveUserList(list);
 	}
 	
-	abstract void startSession();
+	public abstract void startSession();
 }

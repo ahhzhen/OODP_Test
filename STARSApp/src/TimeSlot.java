@@ -10,18 +10,18 @@ public class TimeSlot implements Serializable, Comparable<TimeSlot> {
 	
 	TimeSlot(){}
 	
-	TimeSlot (int d, String s, String e, String v) {
-		day = DayOfWeek.of(d);
-		start = LocalTime.parse(s);
-		end = LocalTime.parse(e);
-		venue = v;
+	TimeSlot (int day, String start, String end, String venue) {
+		this.day = DayOfWeek.of(day);
+		this.start = LocalTime.parse(start);
+		this.end = LocalTime.parse(end);
+		this.venue = venue;
 	}
 	
-	TimeSlot(DayOfWeek d, LocalTime s, LocalTime e, String v) {
-		day = d;
-		start = s;
-		end = e;
-		venue = v;
+	TimeSlot(DayOfWeek day, LocalTime start, LocalTime end, String venue) {
+		this.day = day;
+		this.start = start;
+		this.end = end;
+		this.venue = venue;
 	}
 	
 	public LocalTime getStart() {
