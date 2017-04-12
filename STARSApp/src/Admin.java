@@ -5,10 +5,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class Admin extends User implements Serializable {
+	
+	/**
+	 * Constructor for admin class. It initalises username and password by calling the
+	 * super class. 
+	 * @param  u  the username of admin.
+	 * @param  pw the password of admin.
+	 */
 	Admin(String u, String pw) {
 		super(u, pw, "Admin");
 	}
-
+	/**
+	 * Display a menu which the admin user can select actions to
+	 * perform.
+	 */
 	public void startSession() {
 		int choice = -1;
 		Scanner input = new Scanner(System.in);
@@ -49,7 +59,10 @@ public class Admin extends User implements Serializable {
 			}
 		}
 	}
-
+	/**
+	 * This method always returns display the available options
+	 * that the admin can choose from.
+	 */
 	public void displayMenu() {
 		System.out.println("");
 		System.out.println("1. Edit A Student's Access Period");
@@ -61,6 +74,11 @@ public class Admin extends User implements Serializable {
 		System.out.println("7. Quit");
 	}
 	
+	/**
+	 * Edit the access period of the student based on input
+	 * provided by the user. It sets and amend the period
+	 * of time that a student can access the program.
+	 */
 	public void editStudentAccessPeriod() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter matriculation number of student: ");
@@ -98,6 +116,9 @@ public class Admin extends User implements Serializable {
 		else
 			System.out.println("Student does not exist.");
 	}
+	/**
+	 * This method adds a student based on the input given.
+	 */
 	
 	public void addStudent()
 	{
@@ -126,7 +147,11 @@ public class Admin extends User implements Serializable {
 		else
 			System.out.println("Student already exist!");
 	}
-	
+	/**
+	 * This methods is able to add a new course or update a course
+	 * based on the option chosen by the user and the valid input given
+	 * by the user.
+	 */
 	public void modifyCourse() {
 		Scanner input = new Scanner(System.in);
 		System.out.println("1. Add Course");
@@ -144,7 +169,12 @@ public class Admin extends User implements Serializable {
 			System.out.println("Please enter either choice 1 or 2");
 		}
 	}
-	
+	/**
+	 * This method will always return a course code if the course code given is valid.
+	 * Otherwise, it will return a "". 
+	 * @return      course code, if it exist.
+	 * @return		"", if it does not exist.
+	 */
 	public String checkCourse()
 	{
 		Scanner input = new Scanner(System.in);
@@ -154,6 +184,10 @@ public class Admin extends User implements Serializable {
 			return coursecode;
 		else return "";
 	}
+	/**
+	 * This method adds a new course based on the input provided
+	 * by the user.
+	 */
 	
 	public void addCourse() {
 		System.out.println("---------------Add Course---------------");
@@ -164,7 +198,18 @@ public class Admin extends User implements Serializable {
 			System.out.println("Course Code exist!");
 		}
 	}
-	
+	/**
+	 * updateCoourse uses checkCourse to prompt the user to enter the course code.
+	 * Upon receiving a valid course code, updateCourse will prompt the user to either edit:
+	 * 1. Course name : prompts for new course name and then calls the editCourseName method 
+	 * under Course
+	 * 2. School : prompts for the new school name, then calls the editSchool method under Course
+	 * 3. Course index : prompts user to input the index to be changed, as well as the new index to change into. Returns an error 
+	 * if an invalid input is detected.
+	 * 4. Course vacancy : prompts user to input the index for which the vacancy will be changed, then the new vacancy. Returns
+	 * an error if the new vacancy is less than the number of students in the course. Also returns an error if there are invalid inputs
+	 * or the course index entered does not exist.
+	 */
 	public void updateCourse() {
 		Scanner input = new Scanner(System.in);
 		String coursecode = checkCourse();
@@ -249,7 +294,11 @@ public class Admin extends User implements Serializable {
 		} else
 			System.out.println("Course Code does not exist!");
 	}
-	
+	/**
+	 * checkVacancies checks for the number of empty slots available 
+	 * for a given course and index. The course index is prompted by the Course class.
+	 * An error message is printed when there are no/invalid inputs.
+	 */
 	public void checkVacancies() {
 		String coursecode = checkCourse();
 		if(coursecode!="") {
@@ -259,7 +308,11 @@ public class Admin extends User implements Serializable {
 			System.out.println("Course Code does not exist!");
 		}
 	}
-	
+	/**
+	 * printStudentListByIndex prompts the user to input the course code and course index, then calls 
+	 * printStudentsByIndex in Course in order to print the students based on index.
+	 * Generates an error message for invalid/empty inputs.
+	 */
 	public void printStudentListByIndex(){
 		String coursecode = checkCourse();
 		Scanner input = new Scanner(System.in);
@@ -272,7 +325,11 @@ public class Admin extends User implements Serializable {
 			System.out.println("Course Code does not exist!");
 		}
 	}
-
+	/**
+	 * printStudentListByCourse prompts the user to input a course code. The method will then proceed to retrieve the data
+	 * for the particular Course, then call printStudents in Course to print the students within the particular Course.
+	 * Error messages will be generated for non-existing/invalid course codes.
+	 */
 	public void printStudentListByCourse() {
 		String coursecode = checkCourse();
 		if(coursecode!="") {
@@ -282,7 +339,9 @@ public class Admin extends User implements Serializable {
 			System.out.println("Course Code does not exist!");
 		}
 	}
-	
+	/**
+	 * The user chose to quit the program. The method will print a line indicating that the user has quit the program.
+	 */
 	public void quit() {
 		System.out.println("Thank you for using STARSApp");
 	}
